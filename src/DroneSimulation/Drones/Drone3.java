@@ -8,6 +8,6 @@ import javafx.scene.shape.Cylinder;
 
 public class Drone3 extends DroneObject {
     public Drone3() {
-        super(new Circle(10,10,15, Color.BLUE));
+        super(new Circle(10,10,30, Color.BLUE));
     }
 }

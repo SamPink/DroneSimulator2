@@ -1,8 +1,11 @@
 package DroneSimulation;
 
 import DroneSimulation.Drones.Drone1;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -40,26 +43,24 @@ public class Arena {
     }
 
     private boolean canAddHere(DroneObject drone1) {
-        for (DroneObject d: drones) {
-            if(drone1.isColliding(this)){
-                return false;
-            }
+
+        if(drone1.isColliding(this)){
+            return false;
         }
 
         return true;
     }
     public void addGameObject(DroneObject object, double x, double y) {
-        if(!canAddHere(object)){
-            System.out.println("cant add");
-        }
-
-
-        object.setId(drones.size()+1);
-
         object.getView().setTranslateX(x);
         object.getView().setTranslateY(y);
-        drones.add(object);
 
+        if(object.isColliding(this)){
+            System.out.println("Cant add");
+        }else{
+            object.setId(drones.size()+1);
+
+            drones.add(object);
+        }
     }
 
     public void addGameObjectRandom(DroneObject drone1) {
@@ -75,14 +76,14 @@ public class Arena {
         }
     }
 
-    public void update(Pane root){
+    public void updateGame(Pane root){
         root.getChildren().clear();
         for (DroneObject d: drones){
             if(!d.getColliding()){
                 d.update();
 
                 if(d.isColliding(this)){
-                    System.out.println(d.toString());
+                    //System.out.println(d.toString());
                     d.onCollision();
                 }
             }else{
@@ -92,6 +93,18 @@ public class Arena {
             root.getChildren().add(d.getView());
         }
     }
+    public void updateRight(Pane right) {
+        right.getChildren().clear();
+
+        HBox hBox = new HBox();
+        for (DroneObject d: drones) {
+            hBox.getChildren().add(new TextField(d.toString()));
+        }
+
+        right.getChildren().add(hBox);
+
+    }
+
 
     public String logDrones(){
         String s = "Drones: \n";
@@ -110,8 +123,5 @@ public class Arena {
                 ", sizeY=" + sizeY +
                 ", " +logDrones() +
                 '}';
-    }
-
-    public void update() {
     }
 }

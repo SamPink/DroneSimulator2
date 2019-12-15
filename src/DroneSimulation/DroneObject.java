@@ -10,7 +10,6 @@ public class DroneObject {
 
     private Node view;
     private Point2D velocity;
-    private int posX,posY, width, height;
 
     private boolean alive = true;
     private boolean colliding;
@@ -20,15 +19,10 @@ public class DroneObject {
         this.view = view;
         colliding = false;
         velocity = new Point2D(1, 0);
+        setColliding(false);
     }
 
     public void update() {
-        posX = (int) view.getTranslateX();
-        posY = (int) view.getTranslateY();
-        height = (int) view.getBoundsInParent().getHeight();
-        width = (int) view.getBoundsInParent().getWidth();
-
-
         view.setTranslateX(view.getTranslateX() + velocity.getX());
         view.setTranslateY(view.getTranslateY() + velocity.getY());
     }
@@ -63,16 +57,19 @@ public class DroneObject {
         translateX += (int) view.getBoundsInParent().getHeight() / 2;
         return translateX;
     }
+
     public double getMinX(){
         double translateX = view.getTranslateX();
         translateX -= (int) view.getBoundsInParent().getHeight() / 2;
         return translateX;
     }
+
     public double getMaxY(){
         double translateY = view.getTranslateY();
         translateY += view.getBoundsInParent().getHeight() / 2;
         return translateY;
     }
+
     public double getMinY(){
         double translateY = view.getTranslateY();
         translateY -= view.getBoundsInParent().getHeight() / 2;
@@ -99,11 +96,8 @@ public class DroneObject {
         this.CollidingWithObject = d;
     }
 
-    private int getCollidingWithObject() {
-        if(CollidingWithObject != null){
-            return CollidingWithObject.id;
-        }
-        return -1;
+    public DroneObject getCollidingWithObject() {
+        return getCollidingWithObject();
     }
 
     public boolean isAlive() {
@@ -164,6 +158,8 @@ public class DroneObject {
 
     public void onCollision() {
         rotateAngle((int) getRotate() + 180);
+
+        update();
 
         setColliding(false);
     }

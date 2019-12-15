@@ -27,7 +27,7 @@ public class DroneTest {
 
         arena.rotateDronesRandom();
 
-        arena.update();
+        //arena.update();
 
         System.out.println(arena.toString());
     }
@@ -46,7 +46,7 @@ public class DroneTest {
 
         for (int i = 0; i < 10000; i++) {
             //1000 frames
-            arena.update();
+            //arena.update();
         }
 
         System.out.println(arena.toString());
