@@ -12,7 +12,6 @@ public class Drone2 extends DroneObject {
     @Override
     public void onCollision() {
         rotateAngle((int) getRotate() + 180);
-        update();
         setColliding(false);
     }
 }

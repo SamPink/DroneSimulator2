@@ -8,8 +8,18 @@ import java.text.MessageFormat;
 public class DroneObject {
     private int id;
 
+    private boolean canMove;
+
+    public void setView(Node view) {
+        this.view = view;
+    }
+
     private Node view;
     private Point2D velocity;
+
+    public void setCanMove(boolean canMove) {
+        this.canMove = canMove;
+    }
 
     private boolean alive = true;
     private boolean colliding;
@@ -22,9 +32,24 @@ public class DroneObject {
         setColliding(false);
     }
 
-    public void update() {
+    private void update() {
         view.setTranslateX(view.getTranslateX() + velocity.getX());
         view.setTranslateY(view.getTranslateY() + velocity.getY());
+    }
+
+
+    public void update(Arena arena) {
+
+        if (!getColliding()) {
+            update();
+
+            if (isColliding(arena)) {
+                //System.out.println(d.toString());
+                onCollision();
+            }
+        } else {
+            onCollision();
+        }
     }
 
     public int getId() {
@@ -122,7 +147,7 @@ public class DroneObject {
     }
 
     private boolean isCollidingWithObject(Arena arena) {
-        for (DroneObject d: arena.drones){
+        for (DroneObject d : arena.getDrones()) {
             if(!d.equals(this)){
                 if (getView().getBoundsInParent().intersects(d.getView().getBoundsInParent())){
                     setCollidingWithObject(d);
@@ -136,12 +161,8 @@ public class DroneObject {
 
     private boolean isCollidingWithArena(Arena arena) {
 
-        if (getMaxX() > arena.getSizeX() || getMinX() < 0
-            || getMaxY() > arena.getSizeY() || getMinY() < 0) {
-                return true;
-        }
-
-        return false;
+        return getMaxX() > arena.getSizeX() || getMinX() < 0
+                || getMaxY() > arena.getSizeY() || getMinY() < 0;
     }
 
     public boolean isColliding(Arena arena) {
@@ -159,6 +180,7 @@ public class DroneObject {
     public void onCollision() {
         rotateAngle((int) getRotate() + 180);
 
+        update();
         update();
 
         setColliding(false);

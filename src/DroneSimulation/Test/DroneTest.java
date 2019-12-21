@@ -12,7 +12,7 @@ public class DroneTest {
         System.out.printf("%s,%s%n", d1.getX(), d1.getY());
 
         d1.setVelocity(new Point2D(0,1));
-        d1.update();
+        //d1.update();
 
         System.out.printf("%s,%s%n", d1.getX(), d1.getY());
     }

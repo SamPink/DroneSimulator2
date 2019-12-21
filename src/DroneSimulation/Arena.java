@@ -74,18 +74,9 @@ public class Arena {
 
     public void updateGame(Pane root){
         root.getChildren().clear();
+
         for (DroneObject d: drones){
-            if(!d.getColliding()){
-                d.update();
-
-                if(d.isColliding(this)){
-                    //System.out.println(d.toString());
-                    d.onCollision();
-                }
-            }else{
-                d.onCollision();
-            }
-
+            d.update(this);
             root.getChildren().add(d.getView());
         }
     }

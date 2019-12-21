@@ -38,7 +38,7 @@ public class SimulationApp {
 
         bp.setBottom(setBottom());
 
-        center.setStyle("-fx-background-color: black;");
+        center.setStyle("-fx-background-color: grey;");
 
         return new Scene(bp, 1200, 1000);
     }
@@ -59,30 +59,21 @@ public class SimulationApp {
         Button spawnDrone2 = new Button("Spawn Drone 2");
         Button spawnDrone3 = new Button("Spawn Drone 3");
         Button moveRandom = new Button("Move random");
+        Button addWall = new Button("add wall");
 
-        stop.setOnAction((ActionEvent) -> {
-            pause();
-        });
+        stop.setOnAction((ActionEvent) -> pause());
 
-        start.setOnAction((ActionEvent) -> {
-            init();
-        });
+        start.setOnAction((ActionEvent) -> init());
 
-        spawnDrone.setOnAction((ActionEvent) -> {
-            arena.addGameObjectRandom(new Drone1());
-        });
+        spawnDrone.setOnAction((ActionEvent) -> arena.addGameObjectRandom(new Drone1()));
 
-        spawnDrone2.setOnAction((ActionEvent) -> {
-            arena.addGameObjectRandom(new Drone2());
-        });
+        spawnDrone2.setOnAction((ActionEvent) -> arena.addGameObjectRandom(new Drone2()));
 
-        spawnDrone3.setOnAction((ActionEvent) -> {
-            arena.addGameObjectRandom(new Drone3());
-        });
+        spawnDrone3.setOnAction((ActionEvent) -> arena.addGameObjectRandom(new Drone3()));
 
-        moveRandom.setOnAction((ActionEvent) -> {
-            arena.rotateDronesRandom();
-        });
+        moveRandom.setOnAction((ActionEvent) -> arena.rotateDronesRandom());
+
+        addWall.setOnAction(actionEvent -> fullScreenMenu());
 
         bottom.getChildren().add(start);
         bottom.getChildren().add(stop);
@@ -90,8 +81,16 @@ public class SimulationApp {
         bottom.getChildren().add(spawnDrone2);
         bottom.getChildren().add(spawnDrone3);
         bottom.getChildren().add(moveRandom);
+        bottom.getChildren().add(addWall);
 
         return bottom;
+    }
+
+    private void fullScreenMenu() {
+        pause();
+
+        ObjectCreator objectCreator = new ObjectCreator();
+        bp.setCenter(objectCreator.getView());
     }
 
     public void init(){
@@ -104,7 +103,9 @@ public class SimulationApp {
 
         arena = new Arena((int)center.getWidth(),(int)center.getHeight());
 
-        arena.addGameObjectRandom(new Drone1());
+        for (int i = 0; i < 7; i++) {
+            arena.addGameObjectRandom(new Drone1());
+        }
 
         timer.start();
     }
