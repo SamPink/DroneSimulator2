@@ -8,8 +8,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -25,13 +23,11 @@ public class SimulationApp {
     private Pane center,right,bottom;
     private VBox vBox;
 
-
     public Scene createScene(){
 
         bp = new BorderPane();
 
         center = new Pane();
-;
         center.setPadding(new Insets(20, 20, 20, 20));
 
         vBox = new VBox();
@@ -97,8 +93,6 @@ public class SimulationApp {
 
         return bottom;
     }
-
-
 
     public void init(){
         timer = new AnimationTimer() {

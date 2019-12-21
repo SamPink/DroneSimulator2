@@ -1,25 +1,22 @@
 package DroneSimulation;
 
-import DroneSimulation.Drones.Drone1;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Arena {
-    int sizeX, sizeY;
-    List<DroneObject> drones;
+    private int sizeX, sizeY;
+    private List<DroneObject> drones;
 
     public Arena(int sizeX, int sizeY) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.drones = new ArrayList<>();
     }
-
 
     public int getSizeX() {
         return sizeX;
@@ -44,12 +41,9 @@ public class Arena {
 
     private boolean canAddHere(DroneObject drone1) {
 
-        if(drone1.isColliding(this)){
-            return false;
-        }
-
-        return true;
+        return !drone1.isColliding(this);
     }
+
     public void addGameObject(DroneObject object, double x, double y) {
         object.getView().setTranslateX(x);
         object.getView().setTranslateY(y);
@@ -67,6 +61,8 @@ public class Arena {
         Random r = new Random();
 
         addGameObject(drone1, r.nextInt(getSizeX()), r.nextInt(getSizeY()));
+
+        rotateDronesRandom();
     }
 
     public void rotateDronesRandom(){
@@ -93,6 +89,7 @@ public class Arena {
             root.getChildren().add(d.getView());
         }
     }
+
     public void updateRight(Pane right) {
         right.getChildren().clear();
 
@@ -104,7 +101,6 @@ public class Arena {
         right.getChildren().add(hBox);
 
     }
-
 
     public String logDrones(){
         String s = "Drones: \n";
