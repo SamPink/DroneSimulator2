@@ -2,6 +2,8 @@ package DroneSimulation;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.text.MessageFormat;
 
@@ -190,5 +192,13 @@ public class DroneObject {
     public String toString() {
         return MessageFormat.format("DroneObject {0}'{'view={1}, velocity={2}, X=min{3},max{4} Y=min{5},max{6}, colliding={7}, colliding with {8}'}'",
                 getId(), getView(), getVelocity(), getMinX(), getMaxX(), getMinY(),getMaxY(), getColliding(), getCollidingWithObject());
+    }
+
+    public void draw(GraphicsContext gc) {
+        gc.clearRect(getX(), getY(), 20, 20);
+        gc.setFill(Color.WHITESMOKE);
+        gc.fillRect(getX(), getY(), 20, 20);
+        gc.setFill(Color.GREEN);
+        gc.setStroke(Color.BLUE);
     }
 }

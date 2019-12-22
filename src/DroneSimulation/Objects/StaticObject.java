@@ -11,6 +11,7 @@ public class StaticObject extends DroneObject {
         setCanMove(false);
     }
 
+
     @Override
     public void update(Arena arena) {
     }

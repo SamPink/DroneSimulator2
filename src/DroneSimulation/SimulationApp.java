@@ -7,6 +7,8 @@ import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -21,7 +23,9 @@ public class SimulationApp {
     private AnimationTimer timer;
     private BorderPane bp;
     private Pane center,right,bottom;
+    private Canvas canvas;
     private VBox vBox;
+    private GraphicsContext gc;
 
     public Scene createScene(){
 
@@ -29,7 +33,9 @@ public class SimulationApp {
 
         center = new Pane();
         center.setPadding(new Insets(20, 20, 20, 20));
-
+        canvas = new Canvas(500, 500);
+        center.getChildren().add(canvas);
+        gc = canvas.getGraphicsContext2D();
         vBox = new VBox();
 
         bp.setCenter(center);
@@ -128,7 +134,7 @@ public class SimulationApp {
     }
 
     private void onUpdate(long now) {
-        arena.updateGame(center);
+        arena.updateGame2(gc);
 
         //arena.updateRight(right);
     }

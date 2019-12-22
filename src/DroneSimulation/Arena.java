@@ -1,5 +1,6 @@
 package DroneSimulation;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -78,6 +79,13 @@ public class Arena {
         for (DroneObject d: drones){
             d.update(this);
             root.getChildren().add(d.getView());
+        }
+    }
+
+    public void updateGame2(GraphicsContext gc) {
+        for (DroneObject d : drones) {
+            d.update(this);
+            d.draw(gc);
         }
     }
 
