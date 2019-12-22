@@ -195,7 +195,6 @@ public class DroneObject {
     }
 
     public void draw(GraphicsContext gc) {
-        gc.clearRect(getX(), getY(), 20, 20);
         gc.setFill(Color.WHITESMOKE);
         gc.fillRect(getX(), getY(), 20, 20);
         gc.setFill(Color.GREEN);

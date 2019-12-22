@@ -1,9 +1,8 @@
 package DroneSimulation;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,6 @@ public class Arena {
     }
 
     private boolean canAddHere(DroneObject drone1) {
-
         return !drone1.isColliding(this);
     }
 
@@ -83,22 +81,18 @@ public class Arena {
     }
 
     public void updateGame2(GraphicsContext gc) {
+        // Clear the canvas
+        //gc.setFill( Color.BLACK );
+        gc.fillRect(0, 0, 1000, 1000);
+
         for (DroneObject d : drones) {
             d.update(this);
             d.draw(gc);
         }
     }
 
-    public void updateRight(Pane right) {
-        right.getChildren().clear();
-
-        HBox hBox = new HBox();
-        for (DroneObject d: drones) {
-            hBox.getChildren().add(new TextField(d.toString()));
-        }
-
-        right.getChildren().add(hBox);
-
+    public void updateRight(VBox vBox) {
+        //vBox.getChildren().add();
     }
 
     public String logDrones(){

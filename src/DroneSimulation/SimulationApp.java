@@ -24,7 +24,7 @@ public class SimulationApp {
     private BorderPane bp;
     private Pane center,right,bottom;
     private Canvas canvas;
-    private VBox vBox;
+    private VBox logBox;
     private GraphicsContext gc;
 
     public Scene createScene(){
@@ -33,12 +33,15 @@ public class SimulationApp {
 
         center = new Pane();
         center.setPadding(new Insets(20, 20, 20, 20));
-        canvas = new Canvas(500, 500);
+        canvas = new Canvas(1000, 1000);
         center.getChildren().add(canvas);
         gc = canvas.getGraphicsContext2D();
-        vBox = new VBox();
 
         bp.setCenter(center);
+
+        right = new Pane();
+        logBox = new VBox();
+        right.getChildren().add(logBox);
 
         bp.setRight(right);
 
@@ -136,7 +139,7 @@ public class SimulationApp {
     private void onUpdate(long now) {
         arena.updateGame2(gc);
 
-        //arena.updateRight(right);
+        arena.updateRight(logBox);
     }
 }
 

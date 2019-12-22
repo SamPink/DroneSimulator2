@@ -16,7 +16,7 @@ public class ObjectCreator {
 
     public ObjectCreator() {
         this.view = new Pane();
-        this.canvas = new Canvas(600, 600);
+        this.canvas = new Canvas(500, 500);
         this.gc = canvas.getGraphicsContext2D();
         this.button = new Button("add");
         this.rectangle = new Rectangle(400, 400, Color.BLUE);
