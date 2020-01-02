@@ -10,7 +10,7 @@ public abstract class MovingObject extends Object {
 
     public MovingObject(int width, int height) {
         super(width, height);
-        this.setVelocity(new Point2D(1, 0));
+        setVelocity(new Point2D(2.5, 0));
     }
 
 

@@ -1,4 +1,4 @@
-package com.nh006220.engine;
+package com.nh006220.simulator;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -16,6 +16,7 @@ public class App extends Application {
         stage.setTitle("Nh006220");
 
         stage.setScene(simulationApp.createScene());
+        stage.setResizable(false);
 
         stage.show();
     }

@@ -2,6 +2,7 @@ package com.nh006220.engine.Arena;
 
 import com.nh006220.engine.Objects.MovingObject;
 import com.nh006220.engine.Objects.StaticObject;
+import com.nh006220.engine.SETTINGS;
 import javafx.scene.canvas.GraphicsContext;
 
 public class DroneArena {
@@ -28,7 +29,7 @@ public class DroneArena {
     }
 
     public void updateGame(GraphicsContext gc) {
-        gc.clearRect(0, 0, 800, 800);
+        gc.clearRect(0, 0, SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
 
         for (MovingObject m : objectManager.getMovingObjects()) {
             m.update();
