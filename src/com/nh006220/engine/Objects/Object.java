@@ -1,7 +1,9 @@
 package com.nh006220.engine.Objects;
 
+import com.nh006220.simulator.SimulationApp;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -10,10 +12,12 @@ public abstract class Object {
 
     private Rectangle rectangle;
     private Point2D velocity;
+    private Image image;
 
     public Object(int width, int height) {
         this.rectangle = new Rectangle(width, height);
         this.velocity = new Point2D(0, 0);
+        setImage("images/drone1.png");
     }
 
     public int getX() {
@@ -53,6 +57,14 @@ public abstract class Object {
         rectangle.setTranslateY(posY);
     }
 
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = new Image(SimulationApp.class.getResourceAsStream(image));
+    }
+
     /**
      * @param angle to rotate
      */
@@ -79,8 +91,12 @@ public abstract class Object {
      */
     public void draw(GraphicsContext gc) {
         //TODO draw an image. or maybe an animation
-        gc.setFill(Color.GREEN);
-        gc.fillRect(getX(), getY(), getWidth(), getHeight());
+        try {
+            gc.drawImage(image, getX(), getY(), getWidth(), getHeight());
+        } catch (Exception e) {
+            gc.setFill(Color.GREEN);
+            gc.fillRect(getX(), getY(), getWidth(), getHeight());
+        }
     }
 
     @Override

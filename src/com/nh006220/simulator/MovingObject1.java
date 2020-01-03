@@ -9,5 +9,6 @@ public class MovingObject1 extends MovingObject {
         super(30, 30);
         Random r1 = new Random();
         rotateAngle(r1.nextInt(360));
+        setImage("images/drone1.png");
     }
 }
