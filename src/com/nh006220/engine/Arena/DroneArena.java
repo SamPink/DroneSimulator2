@@ -2,7 +2,7 @@ package com.nh006220.engine.Arena;
 
 import com.nh006220.engine.Objects.MovingObject;
 import com.nh006220.engine.Objects.StaticObject;
-import com.nh006220.engine.SETTINGS;
+import com.nh006220.simulator.SETTINGS;
 import javafx.scene.canvas.GraphicsContext;
 
 public class DroneArena {
@@ -12,8 +12,7 @@ public class DroneArena {
     public DroneArena(int width, int height) {
         this.width = width;
         this.height = height;
-
-        objectManager = new ObjectManager();
+        this.objectManager = new ObjectManager();
     }
 
     public ObjectManager getObjectManager() {

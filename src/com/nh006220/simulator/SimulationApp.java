@@ -1,7 +1,6 @@
 package com.nh006220.simulator;
 
 import com.nh006220.engine.Arena.DroneArena;
-import com.nh006220.engine.SETTINGS;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -11,6 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 
@@ -22,6 +22,12 @@ public class SimulationApp {
     private ToolBar toolBar;
     private AnimationTimer timer;
     private DroneArena arena;
+    private BackgroundImage backgroundImage;
+
+    private static void handle(MouseEvent mouseEvent) {
+        System.out.println("x = " + mouseEvent.getX()
+                + " y = " + mouseEvent.getY());
+    }
 
     public Scene createScene() {
         bp = new BorderPane();
@@ -33,19 +39,26 @@ public class SimulationApp {
         return new Scene(bp, SETTINGS.SceneWidth, SETTINGS.SceneHeight);
     }
 
-    private Node createCenter() {
-        center = new Pane();
-        center.setPadding(new Insets(20, 20, 20, 20));
-        canvas = new Canvas(SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
-        center.getChildren().add(canvas);
-        gc = canvas.getGraphicsContext2D();
-
+    private void loadImages() {
         Image image = new Image(SimulationApp.class.getResourceAsStream("images/background.jpg"));
 
-        BackgroundImage backgroundImage = new BackgroundImage(image,
+        backgroundImage = new BackgroundImage(image,
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+    }
+
+    private Node createCenter() {
+        center = new Pane();
+
+        center.setPadding(new Insets(20, 20, 20, 20));
+        canvas = new Canvas(SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
+        center.getChildren().addAll(canvas);
+        gc = canvas.getGraphicsContext2D();
+
+        loadImages();
 
         center.setBackground(new Background(backgroundImage));
+
+        //center.setOnMousePressed(SimulationApp::handle);
 
         return center;
     }
@@ -89,7 +102,7 @@ public class SimulationApp {
         timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                update();
+                arena.updateGame(gc);
             }
         };
 
@@ -99,9 +112,5 @@ public class SimulationApp {
 
 
         timer.start();
-    }
-
-    private void update() {
-        arena.updateGame(gc);
     }
 }
