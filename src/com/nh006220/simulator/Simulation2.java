@@ -68,14 +68,19 @@ public class Simulation2 extends GameWorld {
     }
 
     private Pane createGame(DroneArena arena) {
-        BorderPane bp = new BorderPane();
+        bpGame = new BorderPane();
 
         setArena(arena);
 
         AnimationTimer timer = new AnimationTimer() {
+            long lastUpdate = 0;
+
             @Override
             public void handle(long l) {
-                onFrame();
+
+                if (l - lastUpdate >= 28_000_000) {
+                    onFrame();
+                }
             }
         };
 
@@ -90,11 +95,11 @@ public class Simulation2 extends GameWorld {
 
         center.setBackground(new Background(backgroundImage));
 
-        bp.setCenter(center);
-        bp.setTop(getToolBar());
-        bp.setRight(listView(getArena()));
+        bpGame.setCenter(center);
+        bpGame.setTop(getToolBar());
+        bpGame.setRight(listView(getArena()));
 
-        return bp;
+        return bpGame;
     }
 
     @Override
@@ -141,18 +146,18 @@ public class Simulation2 extends GameWorld {
     private Node listView(DroneArena arena) {
         ListView arenaContent = new ListView();
 
-
         for (Object obj : arena.getObjectManager().getAllObjects()) {
             arenaContent.getItems().add(obj.toString());
         }
 
         Button editObject = new Button("set Object");
         editObject.setOnAction(actionEvent -> {
-            int selectedIndex = arenaContent.getSelectionModel().getSelectedIndex();
-
-            Object object1 = arena.getObjectManager().getAllObjects().get(selectedIndex);
-
-            newPopup(setDrone(object1));
+            int i = arenaContent.getSelectionModel().getSelectedIndex();
+            newPopup(
+                    setDrone(
+                            arena.getObjectManager().getAllObjects().get(i)
+                    )
+            );
         });
 
         arenaContent.getItems().add(editObject);
@@ -181,11 +186,21 @@ public class Simulation2 extends GameWorld {
     private Pane setDrone(Object i) {
         GridPane gridPane = new GridPane();
 
-        Button setSpeed = new Button("drone" + i.toString());
+        Button setSpeed = new Button("Set speed 1-10");
         TextField setSpeed_input = new TextField();
 
         setSpeed.setOnAction(actionEvent -> {
-            setSpeed_input.getText();
+            try {
+                i.setVelocity(
+                        i.getVelocity().normalize().multiply(
+                                Integer.parseInt(
+                                        setSpeed_input.getText()
+                                )
+                        )
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
         gridPane.setAlignment(Pos.CENTER);
@@ -199,6 +214,7 @@ public class Simulation2 extends GameWorld {
     @Override
     protected void onFrame() {
         getArena().updateGame(gc);
+        bpGame.setRight(listView(getArena()));
     }
 
     private void loadImages() {

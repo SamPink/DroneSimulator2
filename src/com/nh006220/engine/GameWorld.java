@@ -11,6 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -61,6 +62,15 @@ public abstract class GameWorld {
     protected Canvas canvas;
     protected GraphicsContext gc;
     protected BackgroundImage backgroundImage = null;
+    protected BorderPane bpGame;
+
+    public BorderPane getBpGame() {
+        return bpGame;
+    }
+
+    public void setBpGame(BorderPane bpGame) {
+        this.bpGame = bpGame;
+    }
 
     /**
      * Constructor that is called by the derived class. This will
