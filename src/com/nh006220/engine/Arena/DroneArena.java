@@ -1,7 +1,7 @@
 package com.nh006220.engine.Arena;
 
-import com.nh006220.engine.Objects.MovingObject;
-import com.nh006220.engine.Objects.StaticObject;
+import com.nh006220.engine.ObjectTemplates.MovingObject;
+import com.nh006220.engine.ObjectTemplates.StaticObject;
 import com.nh006220.simulator.SETTINGS;
 import javafx.scene.canvas.GraphicsContext;
 

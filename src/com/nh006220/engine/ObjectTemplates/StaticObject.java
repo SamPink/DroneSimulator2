@@ -1,4 +1,4 @@
-package com.nh006220.engine.Objects;
+package com.nh006220.engine.ObjectTemplates;
 
 public abstract class StaticObject extends Object {
     public StaticObject(int width, int height) {

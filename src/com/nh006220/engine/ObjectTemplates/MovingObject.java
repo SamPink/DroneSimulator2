@@ -1,4 +1,4 @@
-package com.nh006220.engine.Objects;
+package com.nh006220.engine.ObjectTemplates;
 
 import com.nh006220.engine.Arena.ObjectManager;
 import com.nh006220.simulator.SETTINGS;

@@ -2,6 +2,8 @@ package com.nh006220.simulator;
 
 import com.nh006220.engine.Arena.DroneArena;
 import com.nh006220.engine.GameWorld;
+import com.nh006220.engine.ObjectTemplates.Object;
+import com.nh006220.simulator.Objects.MovingObject1;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -39,10 +41,9 @@ public class Simulation2 extends GameWorld {
         text.setFont(new Font("Juice ITC", 93));
 
         Button newGame = new Button("New Game");
-        newGame.setOnAction(actionEvent -> {
-            updateScene(createGame());
-        });
+        newGame.setOnAction(actionEvent -> updateScene(arenaBuilder()));
         Button openGame = new Button("Open Game");
+        openGame.setOnAction(actionEvent -> updateScene(createGame()));
         Button settings = new Button("Settings");
 
         VBox vBox = new VBox(newGame, openGame, settings);
@@ -58,11 +59,10 @@ public class Simulation2 extends GameWorld {
         return bp;
     }
 
-    @Override
-    public Pane createGame() {
+    private Pane createGame(DroneArena arena) {
         BorderPane bp = new BorderPane();
 
-        setArena(new DroneArena());
+        setArena(arena);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -89,6 +89,37 @@ public class Simulation2 extends GameWorld {
     }
 
     @Override
+    public Pane createGame() {
+        return createGame(new DroneArena());
+    }
+
+    private Pane arenaBuilder() {
+        BorderPane builder = new BorderPane();
+        DroneArena arena = new DroneArena();
+
+        Text title = new Text("Arena Creator");
+        title.setFont(new Font("Juice ITC", 40));
+
+        Button drone1 = new Button("Drone 1");
+        drone1.setOnAction(actionEvent -> arena.getObjectManager().addMovingObject(new MovingObject1()));
+        Button start = new Button("Start current");
+        start.setOnAction(actionEvent -> updateScene(createGame(arena)));
+        VBox addObjects = new VBox(drone1, start);
+
+        ListView arenaContent = new ListView();
+
+        for (Object obj : arena.getObjectManager().getAllObjects()) {
+            arenaContent.getItems().add(obj.toString());
+        }
+
+        builder.setTop(title);
+        builder.setCenter(addObjects);
+        builder.setRight(arenaContent);
+
+        return builder;
+    }
+
+    @Override
     protected void onFrame() {
         getArena().updateGame(gc);
     }
@@ -98,20 +129,5 @@ public class Simulation2 extends GameWorld {
 
         backgroundImage = new BackgroundImage(image,
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-    }
-
-    private void arenaBuilder() {
-        Pane builder = new Pane();
-        DroneArena arena = new DroneArena();
-
-        Text title = new Text("Arena Creator");
-        title.setFont(new Font("Juice ITC", 40));
-
-        Button drone1 = new Button("Drone 1");
-        // drone1.setOnAction(actionEvent -> arena.getObjectManager().addMovingObject());
-        Button static1 = new Button("Static 1");
-        VBox addObjects = new VBox(drone1, static1);
-
-        ListView arenaContent = new ListView();
     }
 }

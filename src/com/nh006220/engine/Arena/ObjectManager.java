@@ -1,7 +1,8 @@
 package com.nh006220.engine.Arena;
 
-import com.nh006220.engine.Objects.MovingObject;
-import com.nh006220.engine.Objects.StaticObject;
+import com.nh006220.engine.ObjectTemplates.MovingObject;
+import com.nh006220.engine.ObjectTemplates.Object;
+import com.nh006220.engine.ObjectTemplates.StaticObject;
 import com.nh006220.simulator.SETTINGS;
 
 import java.util.ArrayList;
@@ -15,6 +16,16 @@ public class ObjectManager {
     public ObjectManager() {
         this.movingObjects = new ArrayList<>();
         this.staticObjects = new ArrayList<>();
+    }
+
+    public List<Object> getAllObjects() {
+        List<Object> obj = new ArrayList<>();
+
+        obj.addAll(movingObjects);
+        obj.addAll(staticObjects);
+
+        return obj;
+
     }
 
     public List<MovingObject> getMovingObjects() {

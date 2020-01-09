@@ -1,7 +1,7 @@
 package com.nh006220.engine;
 
 import com.nh006220.engine.Arena.DroneArena;
-import com.nh006220.simulator.MovingObject1;
+import com.nh006220.simulator.Objects.MovingObject1;
 import com.nh006220.simulator.SETTINGS;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;

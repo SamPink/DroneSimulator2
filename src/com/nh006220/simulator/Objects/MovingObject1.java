@@ -1,6 +1,6 @@
-package com.nh006220.simulator;
+package com.nh006220.simulator.Objects;
 
-import com.nh006220.engine.Objects.MovingObject;
+import com.nh006220.engine.ObjectTemplates.MovingObject;
 
 import java.util.Random;
 
