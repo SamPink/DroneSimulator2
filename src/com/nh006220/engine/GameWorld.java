@@ -1,8 +1,15 @@
 package com.nh006220.engine;
 
 import com.nh006220.engine.Arena.DroneArena;
+import com.nh006220.simulator.MovingObject1;
+import com.nh006220.simulator.SETTINGS;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -47,6 +54,12 @@ public abstract class GameWorld {
      * The drone manager.
      */
     private DroneArena arena;
+
+    protected Stage stage;
+    protected Pane center = new Pane();
+    protected Canvas canvas;
+    protected GraphicsContext gc;
+    protected BackgroundImage backgroundImage = null;
 
     /**
      * Constructor that is called by the derived class. This will
@@ -158,6 +171,18 @@ public abstract class GameWorld {
         return scene;
     }
 
+    protected ToolBar getToolBar() {
+        Button start = new Button("Start");
+        Button stop = new Button("Stop");
+        Button addDrone = new Button("add Drone");
+
+        start.setOnAction(actionEvent -> start());
+        stop.setOnAction(actionEvent -> shutdown());
+        addDrone.setOnAction(actionEvent -> spawn());
+
+        return new ToolBar(start, stop, addDrone);
+    }
+
     /**
      * Sets the JavaFX Group that will hold all JavaFX nodes which are rendered
      * onto the game surface(Scene) is a JavaFX Group object.
@@ -169,10 +194,18 @@ public abstract class GameWorld {
         this.scene = scene;
     }
 
+    protected void start() {
+        getTimer().start();
+    }
+
     /**
      * Stop threads and stop media from playing.
      */
     public void shutdown() {
         getTimer().stop();
+    }
+
+    protected void spawn() {
+        getArena().getObjectManager().addMovingObject(new MovingObject1(), SETTINGS.CanvasWidth / 2, SETTINGS.CanvasHeight / 2);
     }
 }

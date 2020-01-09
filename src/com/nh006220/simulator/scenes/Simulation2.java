@@ -2,16 +2,13 @@ package com.nh006220.simulator.scenes;
 
 import com.nh006220.engine.Arena.DroneArena;
 import com.nh006220.engine.GameWorld;
-import com.nh006220.simulator.MovingObject1;
 import com.nh006220.simulator.SETTINGS;
 import com.nh006220.simulator.SimulationApp;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -19,12 +16,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Simulation2 extends GameWorld {
-    Stage stage;
-    Pane center = new Pane();
-    Canvas canvas;
-    GraphicsContext gc;
-    BackgroundImage backgroundImage = null;
-
     /**
      * Constructor that is called by the derived class. This will
      * set the frames per second, title, and setup the game loop.
@@ -78,16 +69,6 @@ public class Simulation2 extends GameWorld {
         return bp;
     }
 
-    private ToolBar getToolBar() {
-        Button start = new Button("Start");
-        Button stop = new Button("Stop");
-        Button addDrone = new Button("add Drone");
-
-        addDrone.setOnAction(actionEvent -> spawn());
-
-        return new ToolBar(start, stop, addDrone);
-    }
-
     private void updateScene(Pane scene) {
         setSceneNodes(scene);
         setGameSurface(new Scene(getScene(), SETTINGS.SceneWidth, SETTINGS.SceneHeight));
@@ -109,8 +90,6 @@ public class Simulation2 extends GameWorld {
 
         setGameLoop(timer);
 
-        getTimer().start();
-
         center.setPadding(new Insets(20, 20, 20, 20));
         canvas = new Canvas(SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
         center.getChildren().addAll(canvas);
@@ -125,7 +104,6 @@ public class Simulation2 extends GameWorld {
 
 
         return bp;
-
     }
 
     @Override
@@ -138,9 +116,5 @@ public class Simulation2 extends GameWorld {
 
         backgroundImage = new BackgroundImage(image,
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-    }
-
-    private void spawn() {
-        getArena().getObjectManager().addMovingObject(new MovingObject1(), SETTINGS.CanvasWidth / 2, SETTINGS.CanvasHeight / 2);
     }
 }
