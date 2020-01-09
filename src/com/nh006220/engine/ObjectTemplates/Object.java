@@ -7,8 +7,11 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.text.DecimalFormat;
+
 public abstract class Object {
     private int id;
+    private String name;
 
     private Rectangle rectangle;
     private Point2D velocity;
@@ -18,6 +21,14 @@ public abstract class Object {
         this.rectangle = new Rectangle(width, height);
         this.velocity = new Point2D(0, 0);
         setImage("images/drone1.png");
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getX() {
@@ -101,10 +112,15 @@ public abstract class Object {
 
     @Override
     public String toString() {
-        return "Object{" +
-                "id=" + id +
-                ", rectangle=" + rectangle +
-                ", velocity=" + velocity +
+        DecimalFormat df2 = new DecimalFormat("#.##");
+
+        return getName() + " { " +
+                "x pos=" + getX() +
+                ", y pos=" + getY() +
+                ", width=" + getWidth() +
+                ", height=" + getHeight() +
+                ", speed X=" + df2.format(getVelocity().getX()) +
+                ", speed Y=" + df2.format(getVelocity().getY()) +
                 '}';
     }
 }

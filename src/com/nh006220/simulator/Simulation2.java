@@ -6,6 +6,7 @@ import com.nh006220.engine.ObjectTemplates.Object;
 import com.nh006220.simulator.Objects.MovingObject1;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -101,22 +102,31 @@ public class Simulation2 extends GameWorld {
         title.setFont(new Font("Juice ITC", 40));
 
         Button drone1 = new Button("Drone 1");
-        drone1.setOnAction(actionEvent -> arena.getObjectManager().addMovingObject(new MovingObject1()));
+        drone1.setOnAction(actionEvent -> {
+            arena.getObjectManager().addMovingObject(new MovingObject1());
+            builder.setCenter(listView(arena));
+        });
         Button start = new Button("Start current");
         start.setOnAction(actionEvent -> updateScene(createGame(arena)));
         VBox addObjects = new VBox(drone1, start);
 
+
+
+        builder.setTop(title);
+        builder.setCenter(listView(arena));
+        builder.setRight(addObjects);
+
+        return builder;
+    }
+
+    private Node listView(DroneArena arena) {
         ListView arenaContent = new ListView();
 
         for (Object obj : arena.getObjectManager().getAllObjects()) {
             arenaContent.getItems().add(obj.toString());
         }
 
-        builder.setTop(title);
-        builder.setCenter(addObjects);
-        builder.setRight(arenaContent);
-
-        return builder;
+        return arenaContent;
     }
 
     @Override
