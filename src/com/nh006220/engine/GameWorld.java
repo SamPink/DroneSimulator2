@@ -1,6 +1,7 @@
 package com.nh006220.engine;
 
 import com.nh006220.engine.Arena.DroneArena;
+import com.nh006220.engine.ObjectTemplates.Object;
 import com.nh006220.simulator.Objects.MovingObject1;
 import com.nh006220.simulator.SETTINGS;
 import javafx.animation.AnimationTimer;
@@ -134,6 +135,10 @@ public abstract class GameWorld {
      */
     public DroneArena getArena() {
         return arena;
+    }
+
+    protected Object getObject(int i) {
+        return arena.getObjectManager().getAllObjects().get(i);
     }
 
     public void setArena(DroneArena arena) {
