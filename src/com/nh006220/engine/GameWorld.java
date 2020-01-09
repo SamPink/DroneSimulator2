@@ -194,6 +194,12 @@ public abstract class GameWorld {
         this.scene = scene;
     }
 
+    protected void updateScene(Pane scene) {
+        setSceneNodes(scene);
+        setGameSurface(new Scene(getScene(), SETTINGS.SceneWidth, SETTINGS.SceneHeight));
+        stage.setScene(getGameSurface());
+    }
+
     protected void start() {
         getTimer().start();
     }
@@ -203,9 +209,10 @@ public abstract class GameWorld {
      */
     public void shutdown() {
         getTimer().stop();
+        updateScene(createMenu());
     }
 
     protected void spawn() {
-        getArena().getObjectManager().addMovingObject(new MovingObject1(), SETTINGS.CanvasWidth / 2, SETTINGS.CanvasHeight / 2);
+        getArena().getObjectManager().addMovingObject(new MovingObject1());
     }
 }

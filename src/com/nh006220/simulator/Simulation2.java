@@ -1,14 +1,13 @@
-package com.nh006220.simulator.scenes;
+package com.nh006220.simulator;
 
 import com.nh006220.engine.Arena.DroneArena;
 import com.nh006220.engine.GameWorld;
-import com.nh006220.simulator.SETTINGS;
-import com.nh006220.simulator.SimulationApp;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -16,21 +15,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Simulation2 extends GameWorld {
-    /**
-     * Constructor that is called by the derived class. This will
-     * set the frames per second, title, and setup the game loop.
-     *
-     * @param title - Title of the application window.
-     */
+
     public Simulation2(String title, int fps) {
         super(title, fps);
     }
 
-    /**
-     * Initialize the game world by update the JavaFX Stage.
-     *
-     * @param primaryStage The main window containing the JavaFX Scene.
-     */
     @Override
     public void initialize(Stage primaryStage) {
         stage = primaryStage;
@@ -69,19 +58,13 @@ public class Simulation2 extends GameWorld {
         return bp;
     }
 
-    private void updateScene(Pane scene) {
-        setSceneNodes(scene);
-        setGameSurface(new Scene(getScene(), SETTINGS.SceneWidth, SETTINGS.SceneHeight));
-        stage.setScene(getGameSurface());
-    }
-
     @Override
     public Pane createGame() {
         BorderPane bp = new BorderPane();
-        setArena(new DroneArena(SETTINGS.CanvasWidth, SETTINGS.CanvasHeight));
-        AnimationTimer timer = getTimer();
 
-        timer = new AnimationTimer() {
+        setArena(new DroneArena());
+
+        AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 onFrame();
@@ -95,13 +78,12 @@ public class Simulation2 extends GameWorld {
         center.getChildren().addAll(canvas);
         gc = canvas.getGraphicsContext2D();
 
-        loadImages();
+        loadImages(); //TODO if don't have image load
 
         center.setBackground(new Background(backgroundImage));
 
         bp.setCenter(center);
         bp.setTop(getToolBar());
-
 
         return bp;
     }
@@ -112,9 +94,24 @@ public class Simulation2 extends GameWorld {
     }
 
     private void loadImages() {
-        Image image = new Image(SimulationApp.class.getResourceAsStream("images/background.jpg"));
+        Image image = new Image(Simulation2.class.getResourceAsStream("images/background.jpg"));
 
         backgroundImage = new BackgroundImage(image,
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+    }
+
+    private void arenaBuilder() {
+        Pane builder = new Pane();
+        DroneArena arena = new DroneArena();
+
+        Text title = new Text("Arena Creator");
+        title.setFont(new Font("Juice ITC", 40));
+
+        Button drone1 = new Button("Drone 1");
+        // drone1.setOnAction(actionEvent -> arena.getObjectManager().addMovingObject());
+        Button static1 = new Button("Static 1");
+        VBox addObjects = new VBox(drone1, static1);
+
+        ListView arenaContent = new ListView();
     }
 }

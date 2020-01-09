@@ -9,9 +9,9 @@ public class DroneArena {
     private int width, height;
     private ObjectManager objectManager;
 
-    public DroneArena(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public DroneArena() {
+        this.width = SETTINGS.CanvasWidth;
+        this.height = SETTINGS.CanvasHeight;
         this.objectManager = new ObjectManager();
     }
 

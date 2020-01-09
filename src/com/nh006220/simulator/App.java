@@ -1,7 +1,6 @@
 package com.nh006220.simulator;
 
 import com.nh006220.engine.GameWorld;
-import com.nh006220.simulator.scenes.Simulation2;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

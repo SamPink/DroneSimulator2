@@ -2,6 +2,7 @@ package com.nh006220.engine.Arena;
 
 import com.nh006220.engine.Objects.MovingObject;
 import com.nh006220.engine.Objects.StaticObject;
+import com.nh006220.simulator.SETTINGS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +25,28 @@ public class ObjectManager {
         return staticObjects;
     }
 
-    public void addMovingObject(MovingObject obj, int posX, int posY) {
-        //TODO canAddObject()
+    public boolean addMovingObject(MovingObject obj, int posX, int posY) {
 
         obj.setPos(posX, posY);
 
-        movingObjects.add(obj);
+        if (canAddObject(obj)) {
+            movingObjects.add(obj);
+            return true;
+        } else {
+            System.out.println("oh fuck");
+            return false;
+        }
+    }
+
+    public void addMovingObject(MovingObject obj) {
+        Random r = new Random();
+
+        addMovingObject(obj, (r.nextInt(SETTINGS.CanvasWidth) - 50), (r.nextInt(SETTINGS.CanvasHeight) - 50));
+    }
+
+    private boolean arenaFull() {
+        //TODO check to see if can add
+        return false;
     }
 
     public void addStaticObject(StaticObject obj, int posX, int posY) {
@@ -45,6 +62,10 @@ public class ObjectManager {
             Random r = new Random();
             m.rotateAngle(r.nextInt(360));
         }
+    }
+
+    private boolean canAddObject(MovingObject obj) {
+        return !obj.isColliding(this);
     }
 
     @Override

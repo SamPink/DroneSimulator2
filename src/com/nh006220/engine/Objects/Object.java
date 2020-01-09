@@ -1,6 +1,6 @@
 package com.nh006220.engine.Objects;
 
-import com.nh006220.simulator.SimulationApp;
+import com.nh006220.simulator.Simulation2;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -62,7 +62,7 @@ public abstract class Object {
     }
 
     public void setImage(String image) {
-        this.image = new Image(SimulationApp.class.getResourceAsStream(image));
+        this.image = new Image(Simulation2.class.getResourceAsStream(image));
     }
 
     /**
