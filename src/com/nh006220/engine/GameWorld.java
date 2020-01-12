@@ -190,13 +190,23 @@ public abstract class GameWorld {
         Button start = new Button("Start");
         Button stop = new Button("Stop");
         Button addDrone = new Button("add Drone");
+        Button save = new Button("Save");
+        Button load = new Button("Load");
 
         start.setOnAction(actionEvent -> start());
         stop.setOnAction(actionEvent -> shutdown());
         addDrone.setOnAction(actionEvent -> spawn());
+        save.setOnAction(actionEvent -> save(arena));
+        load.setOnAction(actionEvent -> load());
 
-        return new ToolBar(start, stop, addDrone);
+
+        return new ToolBar(start, stop, addDrone, save, load);
     }
+
+    protected abstract void load();
+
+    protected abstract void save(DroneArena arena);
+
 
     /**
      * Sets the JavaFX Group that will hold all JavaFX nodes which are rendered

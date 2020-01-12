@@ -2,17 +2,17 @@ package com.nh006220.engine.ObjectTemplates;
 
 import com.nh006220.engine.Arena.ObjectManager;
 import com.nh006220.simulator.SETTINGS;
-import javafx.geometry.Point2D;
+
+import java.io.Serializable;
 
 
-public abstract class MovingObject extends Object {
+public abstract class MovingObject extends Object implements Serializable {
     private boolean colliding;
 
-    public MovingObject(int width, int height) {
-        super(width, height);
-        setVelocity(new Point2D(2.5, 0));
+    public MovingObject(int w, int h, int xVel, int yVel, String image) {
+        super(w, h, xVel, yVel, image);
+        //setVelocity(new SerializablePoint2D(2.5, 0));
     }
-
 
     public boolean getColliding() {
         return this.colliding;

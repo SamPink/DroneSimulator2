@@ -1,26 +1,37 @@
 package com.nh006220.engine.ObjectTemplates;
 
+import com.nh006220.engine.SerializableImage;
+import com.nh006220.engine.SerializablePoint2D;
+import com.nh006220.engine.SerializableRectangle;
 import com.nh006220.simulator.Simulation2;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
-public abstract class Object {
+public abstract class Object implements Serializable {
     private int id;
     private String name;
 
-    private Rectangle rectangle;
-    private Point2D velocity;
-    private Image image;
+    private SerializableRectangle rectangle;
+    private SerializablePoint2D velocity;
+    private SerializableImage image;
 
-    public Object(int width, int height) {
-        this.rectangle = new Rectangle(width, height);
-        this.velocity = new Point2D(0, 0);
-        setImage("images/drone1.png");
+    public Object(int w, int h, int xVel, int yVel, String image) {
+        this.rectangle = new SerializableRectangle(w, h);
+        this.velocity = new SerializablePoint2D(xVel, yVel);
+        this.image = new SerializableImage(Simulation2.class.getResourceAsStream(image));
+    }
+
+    public Object() {
+        int w = 50;
+        int h = 50;
+        int xVel = 2;
+        int yVel = 0;
+        String image = "images/drone1.png";
     }
 
     public String getName() {
@@ -51,7 +62,7 @@ public abstract class Object {
         return velocity;
     }
 
-    public void setVelocity(Point2D velocity) {
+    public void setVelocity(SerializablePoint2D velocity) {
         this.velocity = velocity;
     }
 
@@ -68,12 +79,12 @@ public abstract class Object {
         rectangle.setTranslateY(posY);
     }
 
-    public Image getImage() {
+    public SerializableImage getImage() {
         return image;
     }
 
     public void setImage(String image) {
-        this.image = new Image(Simulation2.class.getResourceAsStream(image));
+        this.image = new SerializableImage(Simulation2.class.getResourceAsStream(image));
     }
 
     /**
@@ -81,7 +92,7 @@ public abstract class Object {
      */
     public void rotateAngle(int angle) {
         rectangle.setRotate(angle);
-        setVelocity(new Point2D(
+        setVelocity(new SerializablePoint2D(
                 Math.cos(Math.toRadians(rectangle.getRotate())),
                 Math.sin(Math.toRadians(rectangle.getRotate()))
         ));

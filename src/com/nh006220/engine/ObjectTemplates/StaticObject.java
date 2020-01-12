@@ -1,8 +1,10 @@
 package com.nh006220.engine.ObjectTemplates;
 
-public abstract class StaticObject extends Object {
-    public StaticObject(int width, int height) {
-        super(width, height);
+import java.io.Serializable;
+
+public abstract class StaticObject extends Object implements Serializable {
+    public StaticObject() {
+        super();
     }
 
     /**

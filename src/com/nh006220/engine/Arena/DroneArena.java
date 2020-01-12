@@ -5,7 +5,9 @@ import com.nh006220.engine.ObjectTemplates.StaticObject;
 import com.nh006220.simulator.SETTINGS;
 import javafx.scene.canvas.GraphicsContext;
 
-public class DroneArena {
+import java.io.Serializable;
+
+public class DroneArena implements Serializable {
     private int width, height;
     private ObjectManager objectManager;
 

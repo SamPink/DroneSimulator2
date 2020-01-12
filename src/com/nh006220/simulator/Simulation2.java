@@ -3,9 +3,11 @@ package com.nh006220.simulator;
 import com.nh006220.engine.Arena.DroneArena;
 import com.nh006220.engine.GameWorld;
 import com.nh006220.engine.ObjectTemplates.Object;
+import com.nh006220.engine.SerializablePoint2D;
 import com.nh006220.simulator.Objects.MovingObject1;
 import com.nh006220.simulator.Objects.StaticObject1;
 import javafx.animation.AnimationTimer;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -22,6 +24,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 
 public class Simulation2 extends GameWorld {
@@ -53,8 +57,16 @@ public class Simulation2 extends GameWorld {
         Button openGame = new Button("Open Game");
         openGame.setOnAction(actionEvent -> updateScene(createGame()));
         Button settings = new Button("Settings");
+        Button openMenu = new Button("open menu");
+        openMenu.setOnAction(actionEvent -> {
+            try {
+                updateScene(loadMenu());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
-        VBox vBox = new VBox(newGame, openGame, settings);
+        VBox vBox = new VBox(newGame, openGame, settings, openMenu);
 
         Pane pane = new Pane(text, vBox);
         pane.setTranslateX(500);
@@ -96,10 +108,31 @@ public class Simulation2 extends GameWorld {
         center.setBackground(new Background(backgroundImage));
 
         bpGame.setCenter(center);
+
         bpGame.setTop(getToolBar());
-        bpGame.setRight(listView(getArena()));
+
+        //TODO set right to be list view
+        //bpGame.setRight(listView(getArena()));
 
         return bpGame;
+    }
+
+    protected void save(DroneArena arena) {
+        SaveAndLoad saveAndLoad = new SaveAndLoad();
+
+        saveAndLoad.saveToFile(arena);
+    }
+
+    protected void load() {
+        SaveAndLoad saveAndLoad = new SaveAndLoad();
+
+        DroneArenaSave d = saveAndLoad.loadFromFile();
+
+        DroneArena arena = d.arenaLoad();
+
+        arena.logGame();
+
+        updateScene(createGame(arena));
     }
 
     @Override
@@ -127,7 +160,7 @@ public class Simulation2 extends GameWorld {
 
         Button static1 = new Button("Static 1");
         static1.setOnAction(actionEvent -> {
-            arena.getObjectManager().addStaticObject(new StaticObject1(30, 30), 30, 30);
+            arena.getObjectManager().addStaticObject(new StaticObject1(), 30, 30);
             builder.setCenter(listView(arena));
         });
 
@@ -154,7 +187,7 @@ public class Simulation2 extends GameWorld {
         editObject.setOnAction(actionEvent -> {
             int i = arenaContent.getSelectionModel().getSelectedIndex();
             newPopup(
-                    setDrone(
+                    setDroneMenu(
                             arena.getObjectManager().getAllObjects().get(i)
                     )
             );
@@ -183,7 +216,7 @@ public class Simulation2 extends GameWorld {
         popup.show(stage);
     }
 
-    private Pane setDrone(Object i) {
+    private Pane setDroneMenu(Object i) {
         GridPane gridPane = new GridPane();
 
         Button setSpeed = new Button("Set speed 1-10");
@@ -191,13 +224,8 @@ public class Simulation2 extends GameWorld {
 
         setSpeed.setOnAction(actionEvent -> {
             try {
-                i.setVelocity(
-                        i.getVelocity().normalize().multiply(
-                                Integer.parseInt(
-                                        setSpeed_input.getText()
-                                )
-                        )
-                );
+                int increase = Integer.parseInt(setSpeed_input.getText());
+                i.setVelocity((SerializablePoint2D) i.getVelocity().normalize().multiply(increase));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -214,7 +242,6 @@ public class Simulation2 extends GameWorld {
     @Override
     protected void onFrame() {
         getArena().updateGame(gc);
-        bpGame.setRight(listView(getArena()));
     }
 
     private void loadImages() {
@@ -222,5 +249,9 @@ public class Simulation2 extends GameWorld {
 
         backgroundImage = new BackgroundImage(image,
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+    }
+
+    private Pane loadMenu() throws IOException {
+        return FXMLLoader.load(getClass().getResource("menu.fxml"));
     }
 }

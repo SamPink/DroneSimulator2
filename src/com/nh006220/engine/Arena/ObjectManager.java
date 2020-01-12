@@ -5,11 +5,12 @@ import com.nh006220.engine.ObjectTemplates.Object;
 import com.nh006220.engine.ObjectTemplates.StaticObject;
 import com.nh006220.simulator.SETTINGS;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ObjectManager {
+public class ObjectManager implements Serializable {
     private List<MovingObject> movingObjects;
     private List<StaticObject> staticObjects;
 
