@@ -1,37 +1,44 @@
 package com.nh006220.engine.ObjectTemplates;
 
-import com.nh006220.engine.SerializableImage;
 import com.nh006220.engine.SerializablePoint2D;
-import com.nh006220.engine.SerializableRectangle;
 import com.nh006220.simulator.Simulation2;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.io.Serializable;
 import java.text.DecimalFormat;
 
-public abstract class Object implements Serializable {
+public abstract class Object {
+    private final String imageString;
+    private DroneType droneType;
     private int id;
     private String name;
+    private Rectangle rectangle;
+    private Point2D velocity;
+    private Image image;
 
-    private SerializableRectangle rectangle;
-    private SerializablePoint2D velocity;
-    private SerializableImage image;
+    public Object(int w, int h, double xVel, double yVel, String image, DroneType droneType) {
+        this.droneType = droneType;
 
-    public Object(int w, int h, int xVel, int yVel, String image) {
-        this.rectangle = new SerializableRectangle(w, h);
-        this.velocity = new SerializablePoint2D(xVel, yVel);
-        this.image = new SerializableImage(Simulation2.class.getResourceAsStream(image));
+        this.rectangle = new Rectangle(w, h);
+        this.velocity = new Point2D(xVel, yVel);
+        this.imageString = image;
+        setImage(imageString);
+
     }
 
-    public Object() {
-        int w = 50;
-        int h = 50;
-        int xVel = 2;
-        int yVel = 0;
-        String image = "images/drone1.png";
+    public DroneType getDroneType() {
+        return droneType;
+    }
+
+    public void setDroneType(DroneType droneType) {
+        this.droneType = droneType;
+    }
+
+    public String getImageString() {
+        return imageString;
     }
 
     public String getName() {
@@ -79,12 +86,12 @@ public abstract class Object implements Serializable {
         rectangle.setTranslateY(posY);
     }
 
-    public SerializableImage getImage() {
+    public Image getImage() {
         return image;
     }
 
     public void setImage(String image) {
-        this.image = new SerializableImage(Simulation2.class.getResourceAsStream(image));
+        this.image = new Image(Simulation2.class.getResourceAsStream(image));
     }
 
     /**

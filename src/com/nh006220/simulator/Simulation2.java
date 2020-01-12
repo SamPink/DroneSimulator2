@@ -5,6 +5,7 @@ import com.nh006220.engine.GameWorld;
 import com.nh006220.engine.ObjectTemplates.Object;
 import com.nh006220.engine.SerializablePoint2D;
 import com.nh006220.simulator.Objects.MovingObject1;
+import com.nh006220.simulator.Objects.MovingObject2;
 import com.nh006220.simulator.Objects.StaticObject1;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXMLLoader;
@@ -130,7 +131,7 @@ public class Simulation2 extends GameWorld {
 
         DroneArena arena = d.arenaLoad();
 
-        arena.logGame();
+        //arena.logGame();
 
         updateScene(createGame(arena));
     }
@@ -158,15 +159,21 @@ public class Simulation2 extends GameWorld {
             builder.setCenter(listView(arena));
         });
 
+        Button drone2 = new Button("Drone 2");
+        drone2.setOnAction(actionEvent -> {
+            arena.getObjectManager().addMovingObject(new MovingObject2());
+            builder.setCenter(listView(arena));
+        });
+
         Button static1 = new Button("Static 1");
         static1.setOnAction(actionEvent -> {
-            arena.getObjectManager().addStaticObject(new StaticObject1(), 30, 30);
+            arena.getObjectManager().addStaticObject(new StaticObject1(), 200, 200);
             builder.setCenter(listView(arena));
         });
 
         Button start = new Button("Start current");
         start.setOnAction(actionEvent -> updateScene(createGame(arena)));
-        VBox addObjects = new VBox(drone1, static1, start);
+        VBox addObjects = new VBox(drone1, drone2, static1, start);
 
 
         builder.setTop(hBox);

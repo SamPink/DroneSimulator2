@@ -1,10 +1,8 @@
 package com.nh006220.engine.ObjectTemplates;
 
-import java.io.Serializable;
-
-public abstract class StaticObject extends Object implements Serializable {
-    public StaticObject() {
-        super();
+public abstract class StaticObject extends Object {
+    public StaticObject(int width, int height, String image, DroneType droneType) {
+        super(width, height, 0, 0, image, droneType);
     }
 
     /**

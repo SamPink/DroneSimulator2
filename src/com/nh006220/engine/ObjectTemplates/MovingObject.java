@@ -3,14 +3,12 @@ package com.nh006220.engine.ObjectTemplates;
 import com.nh006220.engine.Arena.ObjectManager;
 import com.nh006220.simulator.SETTINGS;
 
-import java.io.Serializable;
 
-
-public abstract class MovingObject extends Object implements Serializable {
+public abstract class MovingObject extends Object {
     private boolean colliding;
 
-    public MovingObject(int w, int h, int xVel, int yVel, String image) {
-        super(w, h, xVel, yVel, image);
+    public MovingObject(int w, int h, double xVel, double yVel, String image, DroneType droneType) {
+        super(w, h, xVel, yVel, image, droneType);
         //setVelocity(new SerializablePoint2D(2.5, 0));
     }
 

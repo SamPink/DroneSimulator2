@@ -13,6 +13,7 @@ public class SaveAndLoad {
 
     public void saveToFile(DroneArena arena) {
         this.arena = arena;
+
         try {
             FileOutputStream f = new FileOutputStream(new File("myObjects.txt"));
             ObjectOutputStream o = new ObjectOutputStream(f);
@@ -39,7 +40,6 @@ public class SaveAndLoad {
 
             // Read objects
             pr1 = (DroneArenaSave) oi.readObject();
-            System.out.println(pr1.toString());
 
             oi.close();
             fi.close();
