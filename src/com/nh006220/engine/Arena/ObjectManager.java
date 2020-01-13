@@ -1,8 +1,12 @@
 package com.nh006220.engine.Arena;
 
+import com.nh006220.engine.ObjectTemplates.DroneType;
 import com.nh006220.engine.ObjectTemplates.MovingObject;
 import com.nh006220.engine.ObjectTemplates.Object;
 import com.nh006220.engine.ObjectTemplates.StaticObject;
+import com.nh006220.simulator.Objects.MovingObject1;
+import com.nh006220.simulator.Objects.MovingObject2;
+import com.nh006220.simulator.Objects.StaticObject1;
 import com.nh006220.simulator.SETTINGS;
 
 import java.io.Serializable;
@@ -56,13 +60,29 @@ public class ObjectManager implements Serializable {
         addMovingObject(obj, (r.nextInt(SETTINGS.CanvasWidth) - 50), (r.nextInt(SETTINGS.CanvasHeight) - 50));
     }
 
+    public void addObject(DroneType droneType) {
+        if (droneType == DroneType.MovingObject1) {
+            addMovingObject(new MovingObject1());
+        } else if (droneType == DroneType.MovingObject2) {
+            addMovingObject(new MovingObject2());
+        } else if (droneType == DroneType.StaticObject1) {
+            addStaticObject(new StaticObject1());
+        }
+    }
+
+    private void addStaticObject(StaticObject staticObject) {
+        Random r = new Random();
+
+        addStaticObject(staticObject, (r.nextInt(SETTINGS.CanvasWidth) - 50), (r.nextInt(SETTINGS.CanvasHeight) - 50));
+    }
+
+
     private boolean arenaFull() {
         //TODO check to see if can add
         return false;
     }
 
     public void addStaticObject(StaticObject obj, int posX, int posY) {
-        //TODO canAddObject()
 
         obj.setPos(posX, posY);
 
@@ -87,4 +107,5 @@ public class ObjectManager implements Serializable {
                 ", staticObjects=" + staticObjects +
                 '}';
     }
+
 }

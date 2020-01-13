@@ -43,6 +43,11 @@ public abstract class MovingObject extends Object {
                 }
             }
         }
+        for (StaticObject s : objectManager.getStaticObjects()) {
+            if (getRectangle().getBoundsInParent().intersects(s.getRectangle().getBoundsInParent())) {
+                setColliding(true);
+            }
+        }
 
         return getColliding();
     }

@@ -1,14 +1,16 @@
 package com.nh006220.engine;
 
 import com.nh006220.engine.Arena.DroneArena;
+import com.nh006220.engine.ObjectTemplates.DroneType;
 import com.nh006220.engine.ObjectTemplates.Object;
-import com.nh006220.simulator.Objects.MovingObject1;
 import com.nh006220.simulator.SETTINGS;
 import javafx.animation.AnimationTimer;
+import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BorderPane;
@@ -194,15 +196,20 @@ public abstract class GameWorld {
         Button load = new Button("Load");
         Button resetArena = new Button("Reset arena");
 
+        ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(DroneType.values()));
+
         start.setOnAction(actionEvent -> start());
         stop.setOnAction(actionEvent -> shutdown());
         addDrone.setOnAction(actionEvent -> spawn());
         save.setOnAction(actionEvent -> save(arena));
         load.setOnAction(actionEvent -> load());
         resetArena.setOnAction(actionEvent -> reset());
+        comboBox.setOnAction(actionEvent -> {
+            spawn(DroneType.valueOf(comboBox.getValue().toString()));
+        });
 
 
-        return new ToolBar(start, stop, addDrone, save, load, resetArena);
+        return new ToolBar(start, stop, comboBox, save, load, resetArena);
     }
 
     protected void reset() {
@@ -250,7 +257,11 @@ public abstract class GameWorld {
     }
 
 
+    protected void spawn(DroneType droneType) {
+        getArena().getObjectManager().addObject(droneType);
+    }
+
     protected void spawn() {
-        getArena().getObjectManager().addMovingObject(new MovingObject1());
+
     }
 }
