@@ -1,6 +1,5 @@
 package com.nh006220.engine.ObjectTemplates;
 
-import com.nh006220.engine.SerializablePoint2D;
 import com.nh006220.simulator.Simulation2;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,6 +17,7 @@ public abstract class Object {
     private Rectangle rectangle;
     private Point2D velocity;
     private Image image;
+    private int velMultiply = 1;
 
     public Object(int w, int h, double xVel, double yVel, String image, DroneType droneType) {
         this.droneType = droneType;
@@ -27,6 +27,16 @@ public abstract class Object {
         this.imageString = image;
         setImage(imageString);
 
+    }
+
+    public int getVelMultiply() {
+        return velMultiply;
+    }
+
+    public void setVelMultiply(int velMultiply) {
+        this.velMultiply = velMultiply;
+
+        setVelocity(getVelocity().multiply(velMultiply));
     }
 
     public DroneType getDroneType() {
@@ -69,7 +79,7 @@ public abstract class Object {
         return velocity;
     }
 
-    public void setVelocity(SerializablePoint2D velocity) {
+    public void setVelocity(Point2D velocity) {
         this.velocity = velocity;
     }
 
@@ -99,10 +109,11 @@ public abstract class Object {
      */
     public void rotateAngle(int angle) {
         rectangle.setRotate(angle);
-        setVelocity(new SerializablePoint2D(
+        setVelocity(new Point2D(
                 Math.cos(Math.toRadians(rectangle.getRotate())),
                 Math.sin(Math.toRadians(rectangle.getRotate()))
         ));
+        setVelocity(getVelocity().multiply(velMultiply));
     }
 
     /**

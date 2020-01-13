@@ -3,21 +3,16 @@ package com.nh006220.simulator;
 import com.nh006220.engine.Arena.DroneArena;
 import com.nh006220.engine.GameWorld;
 import com.nh006220.engine.ObjectTemplates.Object;
-import com.nh006220.engine.SerializablePoint2D;
 import com.nh006220.simulator.Objects.MovingObject1;
 import com.nh006220.simulator.Objects.MovingObject2;
 import com.nh006220.simulator.Objects.StaticObject1;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -180,7 +175,7 @@ public class Simulation2 extends GameWorld {
             arena.logGame();
 
             reset();
-            updateScene(createGame(arena));
+            updateScene(arenaBuilder(arena));
         });
 
         newPopup(new HBox(listView, select));
@@ -192,8 +187,11 @@ public class Simulation2 extends GameWorld {
     }
 
     private Pane arenaBuilder() {
+        return arenaBuilder(new DroneArena());
+    }
+
+    private Pane arenaBuilder(DroneArena arena) {
         BorderPane builder = new BorderPane();
-        DroneArena arena = new DroneArena();
 
         Text title = new Text("Arena Creator");
         title.setFont(new Font("Juice ITC", 40));
@@ -240,17 +238,13 @@ public class Simulation2 extends GameWorld {
             arenaContent.getItems().add(obj.toString());
         }
 
-        Button editObject = new Button("set Object");
-        editObject.setOnAction(actionEvent -> {
+        arenaContent.setOnMousePressed(mouseEvent -> {
             int i = arenaContent.getSelectionModel().getSelectedIndex();
+
             newPopup(
-                    setDroneMenu(
-                            arena.getObjectManager().getAllObjects().get(i)
-                    )
+                    setDroneMenu(arena.getObjectManager().getAllObjects().get(i))
             );
         });
-
-        arenaContent.getItems().add(editObject);
 
         return arenaContent;
     }
@@ -274,26 +268,40 @@ public class Simulation2 extends GameWorld {
     }
 
     private Pane setDroneMenu(Object i) {
-        GridPane gridPane = new GridPane();
 
-        Button setSpeed = new Button("Set speed 1-10");
-        TextField setSpeed_input = new TextField();
 
-        setSpeed.setOnAction(actionEvent -> {
-            try {
-                int increase = Integer.parseInt(setSpeed_input.getText());
-                i.setVelocity((SerializablePoint2D) i.getVelocity().normalize().multiply(increase));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        Slider speed = new Slider(0, 10, 1);
+        speed.setValue(i.getVelMultiply());
+        speed.setShowTickLabels(true);
+
+        HBox setSpeed = new HBox(new Text("Set speed"), speed);
+
+        Slider rotation = new Slider(0, 360, 5);
+        rotation.setValue(i.getRotate());
+        rotation.setShowTickLabels(true);
+
+        HBox setRotation = new HBox(new Text("Set rotation"), rotation);
+
+        Slider posX = new Slider(0, SETTINGS.CanvasWidth, 5);
+        posX.setShowTickLabels(true);
+        posX.setValue(i.getX());
+        Slider posY = new Slider(0, SETTINGS.CanvasHeight, 5);
+        posY.setShowTickLabels(true);
+        posY.setValue(i.getY());
+
+        HBox setX = new HBox(new Text("Set x"), posX);
+        HBox setY = new HBox(new Text("Set y"), posY);
+
+        Button store = new Button("save");
+
+        store.setOnAction(actionEvent -> {
+            i.setVelMultiply((int) speed.getValue());
+            i.rotateAngle((int) rotation.getValue());
+            i.setPos((int) posX.getValue(), (int) posY.getValue());
+
+            System.out.println(i.toString());
         });
-
-        gridPane.setAlignment(Pos.CENTER);
-
-        gridPane.add(setSpeed, 0, 0);
-        gridPane.add(setSpeed_input, 0, 1);
-
-        return gridPane;
+        return new VBox(setSpeed, setRotation, setX, setY, store);
     }
 
     @Override
