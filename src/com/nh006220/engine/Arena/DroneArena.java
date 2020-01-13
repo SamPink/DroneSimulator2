@@ -50,4 +50,5 @@ public class DroneArena implements Serializable {
     public void logGame() {
         System.out.println(objectManager.toString());
     }
+
 }

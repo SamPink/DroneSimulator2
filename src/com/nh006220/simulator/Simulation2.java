@@ -26,7 +26,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Simulation2 extends GameWorld {
@@ -103,6 +106,7 @@ public class Simulation2 extends GameWorld {
         canvas = new Canvas(SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
         center.getChildren().addAll(canvas);
         gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
 
         loadImages(); //TODO if don't have image load
 
@@ -118,22 +122,68 @@ public class Simulation2 extends GameWorld {
         return bpGame;
     }
 
+    private void clearArena() {
+        setArena(new DroneArena());
+    }
+
     protected void save(DroneArena arena) {
+        pause();
         SaveAndLoad saveAndLoad = new SaveAndLoad();
 
-        saveAndLoad.saveToFile(arena);
+        TextField textField = new TextField();
+        Button save = new Button("Save name");
+
+        newPopup(new HBox(textField, save));
+
+        save.setOnAction(actionEvent -> {
+            if (textField.getText() != null) {
+
+                saveAndLoad.setFileName(textField.getText());
+
+                saveAndLoad.saveToFile(arena);
+
+                System.out.println("Saved");
+            }
+        });
+    }
+
+    private List<String> getFilesInDirectory() {
+        List<String> saves = new ArrayList<>();
+        File f = new File("."); // current directory
+        File[] files = f.listFiles();
+        for (File file : files) {
+            if (!file.isDirectory() && file.getName().contains(".txt")) {
+                saves.add(file.getName());
+            }
+        }
+        return saves;
     }
 
     protected void load() {
         SaveAndLoad saveAndLoad = new SaveAndLoad();
 
-        DroneArenaSave d = saveAndLoad.loadFromFile();
+        ListView listView = new ListView();
 
-        DroneArena arena = d.arenaLoad();
+        for (String s : getFilesInDirectory()) {
+            listView.getItems().add(s);
+        }
 
-        //arena.logGame();
+        Button select = new Button("Open");
 
-        updateScene(createGame(arena));
+        select.setOnAction(actionEvent -> {
+            DroneArenaSave d = saveAndLoad.loadFromFile(
+                    listView.getSelectionModel().getSelectedItem().toString()
+            );
+
+            DroneArena arena = d.arenaLoad();
+
+            arena.logGame();
+
+            reset();
+            updateScene(createGame(arena));
+        });
+
+        newPopup(new HBox(listView, select));
     }
 
     @Override
@@ -205,7 +255,7 @@ public class Simulation2 extends GameWorld {
         return arenaContent;
     }
 
-    public void newPopup(Node node) {
+    private void newPopup(Node node) {
         BorderPane bp = new BorderPane();
         final Popup popup = new Popup();
         bp.setBackground(new Background(new BackgroundFill(Color.CORNFLOWERBLUE, CornerRadii.EMPTY, Insets.EMPTY)));

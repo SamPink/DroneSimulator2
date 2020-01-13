@@ -7,6 +7,7 @@ import java.io.*;
 public class SaveAndLoad {
 
     private DroneArena arena;
+    private String fileName = "defaultSave.txt";
 
     public SaveAndLoad() {
     }
@@ -15,7 +16,7 @@ public class SaveAndLoad {
         this.arena = arena;
 
         try {
-            FileOutputStream f = new FileOutputStream(new File("myObjects.txt"));
+            FileOutputStream f = new FileOutputStream(new File(fileName));
             ObjectOutputStream o = new ObjectOutputStream(f);
 
             DroneArenaSave ds = new DroneArenaSave();
@@ -31,11 +32,11 @@ public class SaveAndLoad {
         }
     }
 
-    public DroneArenaSave loadFromFile() {
+    public DroneArenaSave loadFromFile(String s) {
         FileInputStream fi = null;
         DroneArenaSave pr1 = new DroneArenaSave();
         try {
-            fi = new FileInputStream(new File("myObjects.txt"));
+            fi = new FileInputStream(new File(s));
             ObjectInputStream oi = new ObjectInputStream(fi);
 
             // Read objects
@@ -54,5 +55,15 @@ public class SaveAndLoad {
         }
 
         return pr1;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String text) {
+        if (!text.contains(".txt")) {
+            fileName = text + ".txt";
+        }
     }
 }

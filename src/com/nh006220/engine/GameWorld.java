@@ -192,15 +192,23 @@ public abstract class GameWorld {
         Button addDrone = new Button("add Drone");
         Button save = new Button("Save");
         Button load = new Button("Load");
+        Button resetArena = new Button("Reset arena");
 
         start.setOnAction(actionEvent -> start());
         stop.setOnAction(actionEvent -> shutdown());
         addDrone.setOnAction(actionEvent -> spawn());
         save.setOnAction(actionEvent -> save(arena));
         load.setOnAction(actionEvent -> load());
+        resetArena.setOnAction(actionEvent -> reset());
 
 
-        return new ToolBar(start, stop, addDrone, save, load);
+        return new ToolBar(start, stop, addDrone, save, load, resetArena);
+    }
+
+    protected void reset() {
+        gc.clearRect(0, 0, SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
+        setArena(new DroneArena());
+        getArena().updateGame(gc);
     }
 
     protected abstract void load();
@@ -232,10 +240,15 @@ public abstract class GameWorld {
     /**
      * Stop threads and stop media from playing.
      */
-    public void shutdown() {
+    protected void shutdown() {
         getTimer().stop();
         updateScene(createMenu());
     }
+
+    protected void pause() {
+        getTimer().stop();
+    }
+
 
     protected void spawn() {
         getArena().getObjectManager().addMovingObject(new MovingObject1());

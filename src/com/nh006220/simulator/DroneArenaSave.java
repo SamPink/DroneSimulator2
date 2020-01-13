@@ -76,8 +76,7 @@ public class DroneArenaSave implements Serializable {
 
     private class DroneStore implements Serializable {
         private DroneType droneType;
-        private int width;
-        private int height;
+        private int width, height;
         private double xVel, yVel;
         private int xPos, yPos;
         private String image;
