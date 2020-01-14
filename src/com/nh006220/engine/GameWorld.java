@@ -6,15 +6,16 @@ import com.nh006220.engine.ObjectTemplates.Object;
 import com.nh006220.simulator.SETTINGS;
 import javafx.animation.AnimationTimer;
 import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ToolBar;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 
@@ -188,28 +189,105 @@ public abstract class GameWorld {
         return scene;
     }
 
+    protected void newPopup(Node node) {
+        BorderPane bp = new BorderPane();
+        final Popup popup = new Popup();
+        bp.setBackground(new Background(new BackgroundFill(Color.CORNFLOWERBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        bp.setPrefSize(300, 300);
+
+        Button button = new Button("close");
+        button.setOnAction(actionEvent -> {
+            popup.hide();
+        });
+        bp.setBottom(new ToolBar(button));
+
+        bp.setCenter(node);
+
+        popup.getContent().add(bp);
+        popup.show(stage);
+    }
+
+    protected Node listView(DroneArena arena) {
+        ListView arenaContent = new ListView();
+
+        for (Object obj : arena.getObjectManager().getAllObjects()) {
+            arenaContent.getItems().add(obj.toString());
+        }
+
+        arenaContent.setOnMousePressed(mouseEvent -> {
+            int i = arenaContent.getSelectionModel().getSelectedIndex();
+
+            newPopup(
+                    setDroneMenu(arena.getObjectManager().getAllObjects().get(i))
+            );
+        });
+
+        return arenaContent;
+    }
+
+    protected Pane setDroneMenu(Object i) {
+        Slider speed = new Slider(0, 10, 1);
+        speed.setValue(i.getVelMultiply());
+        speed.setShowTickLabels(true);
+
+        HBox setSpeed = new HBox(new Text("Set speed"), speed);
+
+        Slider rotation = new Slider(0, 360, 5);
+        rotation.setValue(i.getRotate());
+        rotation.setShowTickLabels(true);
+
+        HBox setRotation = new HBox(new Text("Set rotation"), rotation);
+
+        Slider posX = new Slider(0, SETTINGS.CanvasWidth, 5);
+        posX.setShowTickLabels(true);
+        posX.setValue(i.getX());
+        Slider posY = new Slider(0, SETTINGS.CanvasHeight, 5);
+        posY.setShowTickLabels(true);
+        posY.setValue(i.getY());
+
+        HBox setX = new HBox(new Text("Set x"), posX);
+        HBox setY = new HBox(new Text("Set y"), posY);
+
+        Button store = new Button("save");
+
+        store.setOnAction(actionEvent -> {
+            i.setVelMultiply((int) speed.getValue());
+            i.rotateAngle((int) rotation.getValue());
+            i.setPos((int) posX.getValue(), (int) posY.getValue());
+
+            System.out.println(i.toString());
+        });
+        return new VBox(setSpeed, setRotation, setX, setY, store);
+    }
+
     protected ToolBar getToolBar() {
         Button start = new Button("Start");
+        Button pause = new Button("Pause");
         Button stop = new Button("Stop");
-        Button addDrone = new Button("add Drone");
         Button save = new Button("Save");
         Button load = new Button("Load");
         Button resetArena = new Button("Reset arena");
+        Button arenaEditor = new Button("Edit Arena");
+
 
         ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(DroneType.values()));
 
         start.setOnAction(actionEvent -> start());
+        pause.setOnAction(actionEvent -> pause());
         stop.setOnAction(actionEvent -> shutdown());
-        addDrone.setOnAction(actionEvent -> spawn());
         save.setOnAction(actionEvent -> save(arena));
         load.setOnAction(actionEvent -> load());
         resetArena.setOnAction(actionEvent -> reset());
         comboBox.setOnAction(actionEvent -> {
             spawn(DroneType.valueOf(comboBox.getValue().toString()));
         });
+        arenaEditor.setOnAction(actionEvent -> {
+            pause();
+            newPopup(listView(getArena()));
+        });
 
 
-        return new ToolBar(start, stop, comboBox, save, load, resetArena);
+        return new ToolBar(start, stop, comboBox, save, load, resetArena, arenaEditor);
     }
 
     protected void reset() {

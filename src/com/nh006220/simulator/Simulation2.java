@@ -2,23 +2,21 @@ package com.nh006220.simulator;
 
 import com.nh006220.engine.Arena.DroneArena;
 import com.nh006220.engine.GameWorld;
-import com.nh006220.engine.ObjectTemplates.Object;
 import com.nh006220.simulator.Objects.MovingObject1;
 import com.nh006220.simulator.Objects.MovingObject2;
 import com.nh006220.simulator.Objects.StaticObject1;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -229,79 +227,6 @@ public class Simulation2 extends GameWorld {
         builder.setRight(addObjects);
 
         return builder;
-    }
-
-    private Node listView(DroneArena arena) {
-        ListView arenaContent = new ListView();
-
-        for (Object obj : arena.getObjectManager().getAllObjects()) {
-            arenaContent.getItems().add(obj.toString());
-        }
-
-        arenaContent.setOnMousePressed(mouseEvent -> {
-            int i = arenaContent.getSelectionModel().getSelectedIndex();
-
-            newPopup(
-                    setDroneMenu(arena.getObjectManager().getAllObjects().get(i))
-            );
-        });
-
-        return arenaContent;
-    }
-
-    private void newPopup(Node node) {
-        BorderPane bp = new BorderPane();
-        final Popup popup = new Popup();
-        bp.setBackground(new Background(new BackgroundFill(Color.CORNFLOWERBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-        bp.setPrefSize(300, 300);
-
-        Button button = new Button("close");
-        button.setOnAction(actionEvent -> {
-            popup.hide();
-        });
-        bp.setBottom(new ToolBar(button));
-
-        bp.setCenter(node);
-
-        popup.getContent().add(bp);
-        popup.show(stage);
-    }
-
-    private Pane setDroneMenu(Object i) {
-
-
-        Slider speed = new Slider(0, 10, 1);
-        speed.setValue(i.getVelMultiply());
-        speed.setShowTickLabels(true);
-
-        HBox setSpeed = new HBox(new Text("Set speed"), speed);
-
-        Slider rotation = new Slider(0, 360, 5);
-        rotation.setValue(i.getRotate());
-        rotation.setShowTickLabels(true);
-
-        HBox setRotation = new HBox(new Text("Set rotation"), rotation);
-
-        Slider posX = new Slider(0, SETTINGS.CanvasWidth, 5);
-        posX.setShowTickLabels(true);
-        posX.setValue(i.getX());
-        Slider posY = new Slider(0, SETTINGS.CanvasHeight, 5);
-        posY.setShowTickLabels(true);
-        posY.setValue(i.getY());
-
-        HBox setX = new HBox(new Text("Set x"), posX);
-        HBox setY = new HBox(new Text("Set y"), posY);
-
-        Button store = new Button("save");
-
-        store.setOnAction(actionEvent -> {
-            i.setVelMultiply((int) speed.getValue());
-            i.rotateAngle((int) rotation.getValue());
-            i.setPos((int) posX.getValue(), (int) posY.getValue());
-
-            System.out.println(i.toString());
-        });
-        return new VBox(setSpeed, setRotation, setX, setY, store);
     }
 
     @Override
