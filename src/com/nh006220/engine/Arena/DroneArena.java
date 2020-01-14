@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import java.io.Serializable;
 
 public class DroneArena implements Serializable {
+    private DroneActions droneActions;
     private int width, height;
     private ObjectManager objectManager;
 
@@ -15,10 +16,23 @@ public class DroneArena implements Serializable {
         this.width = SETTINGS.CanvasWidth;
         this.height = SETTINGS.CanvasHeight;
         this.objectManager = new ObjectManager();
+        this.droneActions = new DroneActions();
     }
 
     public ObjectManager getObjectManager() {
         return objectManager;
+    }
+
+    public void setObjectManager(ObjectManager objectManager) {
+        this.objectManager = objectManager;
+    }
+
+    public DroneActions getDroneActions() {
+        return droneActions;
+    }
+
+    public void setDroneActions(DroneActions droneActions) {
+        this.droneActions = droneActions;
     }
 
     public int getWidth() {
@@ -49,6 +63,10 @@ public class DroneArena implements Serializable {
 
     public void logGame() {
         System.out.println(objectManager.toString());
+    }
+
+    public void rotateRandom() {
+        droneActions.rotateRandom(objectManager);
     }
 
 }

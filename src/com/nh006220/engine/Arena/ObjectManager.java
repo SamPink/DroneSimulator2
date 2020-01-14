@@ -77,11 +77,6 @@ public class ObjectManager implements Serializable {
     }
 
 
-    private boolean arenaFull() {
-        //TODO check to see if can add
-        return false;
-    }
-
     public void addStaticObject(StaticObject obj, int posX, int posY) {
 
         obj.setPos(posX, posY);
