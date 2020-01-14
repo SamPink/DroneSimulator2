@@ -143,13 +143,12 @@ public abstract class Object {
     public String toString() {
         DecimalFormat df2 = new DecimalFormat("#.##");
 
-        return getDroneType().toString() + " { " +
-                "x pos=" + getX() +
-                ", y pos=" + getY() +
-                ", width=" + getWidth() +
+        return getDroneType().toString() + " \n\t{ " +
+                "pos x,y = " + getX() + "," + getY() +
+                " , speed x,y= " + df2.format(getVelocity().getX()) +
+                " ," + df2.format(getVelocity().getY()) +
+                " , width=" + getWidth() +
                 ", height=" + getHeight() +
-                ", speed X=" + df2.format(getVelocity().getX()) +
-                ", speed Y=" + df2.format(getVelocity().getY()) +
-                '}';
+                " }";
     }
 }

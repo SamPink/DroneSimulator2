@@ -220,6 +220,7 @@ public abstract class GameWorld {
 
     protected Node listView(DroneArena arena) {
         ListView arenaContent = new ListView();
+        arenaContent.setMinWidth(400);
 
         for (Object obj : arena.getObjectManager().getAllObjects()) {
             arenaContent.getItems().add(obj.toString());

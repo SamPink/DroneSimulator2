@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -50,20 +51,15 @@ public class Simulation2 extends GameWorld {
         text.setFont(new Font("Juice ITC", 93));
 
         Button newGame = new Button("New Game");
-        newGame.setOnAction(actionEvent -> updateScene(arenaBuilder()));
         Button openGame = new Button("Open Game");
-        openGame.setOnAction(actionEvent -> load());
         Button settings = new Button("Settings");
-        Button openMenu = new Button("open menu");
-        openMenu.setOnAction(actionEvent -> {
-            try {
-                updateScene(loadMenu());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        Button openHelp = new Button("Open Help");
 
-        VBox vBox = new VBox(newGame, openGame, settings, openMenu);
+        newGame.setOnAction(actionEvent -> updateScene(arenaBuilder()));
+        openGame.setOnAction(actionEvent -> load());
+        openHelp.setOnAction(actionEvent -> updateScene(new Pane(new TextArea("Helpful information"))));
+
+        VBox vBox = new VBox(newGame, openGame, settings, openHelp);
 
         Pane pane = new Pane(text, vBox);
         pane.setTranslateX(500);
@@ -76,7 +72,7 @@ public class Simulation2 extends GameWorld {
         return bp;
     }
 
-    private Pane createGame(DroneArena arena) {
+    private <TODO> Pane createGame(DroneArena arena) {
         bpGame = new BorderPane();
 
         setArena(arena);
@@ -110,7 +106,7 @@ public class Simulation2 extends GameWorld {
         bpGame.setTop(getToolBar());
 
         //TODO set right to be list view
-        //bpGame.setRight(listView(getArena()));
+        bpGame.setRight(listView(getArena()));
 
         start();
 
@@ -258,6 +254,7 @@ public class Simulation2 extends GameWorld {
     @Override
     protected void onFrame() {
         getArena().updateGame(gc);
+        bpGame.setRight(listView(getArena()));
     }
 
     private void loadImages() {
