@@ -143,7 +143,7 @@ public abstract class Object {
     public String toString() {
         DecimalFormat df2 = new DecimalFormat("#.##");
 
-        return getName() + " { " +
+        return getDroneType().toString() + " { " +
                 "x pos=" + getX() +
                 ", y pos=" + getY() +
                 ", width=" + getWidth() +

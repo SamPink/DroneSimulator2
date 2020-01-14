@@ -52,7 +52,7 @@ public class Simulation2 extends GameWorld {
         Button newGame = new Button("New Game");
         newGame.setOnAction(actionEvent -> updateScene(arenaBuilder()));
         Button openGame = new Button("Open Game");
-        openGame.setOnAction(actionEvent -> updateScene(createGame()));
+        openGame.setOnAction(actionEvent -> load());
         Button settings = new Button("Settings");
         Button openMenu = new Button("open menu");
         openMenu.setOnAction(actionEvent -> {
@@ -112,6 +112,8 @@ public class Simulation2 extends GameWorld {
         //TODO set right to be list view
         //bpGame.setRight(listView(getArena()));
 
+        start();
+
         return bpGame;
     }
 
@@ -120,24 +122,31 @@ public class Simulation2 extends GameWorld {
     }
 
     protected void save(DroneArena arena) {
-        pause();
         SaveAndLoad saveAndLoad = new SaveAndLoad();
 
-        TextField textField = new TextField();
-        Button save = new Button("Save name");
+        if (!getCurrentLoad().isEmpty()) {
+            saveAndLoad.setFileName(getCurrentLoad());
 
-        newPopup(new HBox(textField, save));
+            saveAndLoad.saveToFile(arena);
 
-        save.setOnAction(actionEvent -> {
-            if (textField.getText() != null) {
+            System.out.println("Saved");
+        } else {
+            TextField textField = new TextField();
+            Button save = new Button("Save name");
 
-                saveAndLoad.setFileName(textField.getText());
+            newPopup(new HBox(textField, save));
 
-                saveAndLoad.saveToFile(arena);
+            save.setOnAction(actionEvent -> {
+                if (textField.getText() != null) {
 
-                System.out.println("Saved");
-            }
-        });
+                    saveAndLoad.setFileName(textField.getText());
+
+                    saveAndLoad.saveToFile(arena);
+
+                    System.out.println("Saved");
+                }
+            });
+        }
     }
 
     private List<String> getFilesInDirectory() {
@@ -170,10 +179,14 @@ public class Simulation2 extends GameWorld {
 
             DroneArena arena = d.arenaLoad();
 
+            setCurrentLoad(listView.getSelectionModel().getSelectedItem().toString());
+
             arena.logGame();
 
             reset();
             updateScene(arenaBuilder(arena));
+            stage.setTitle(getCurrentLoad().replace(".txt", ""));
+
         });
 
         newPopup(new HBox(listView, select));

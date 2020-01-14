@@ -66,6 +66,15 @@ public abstract class GameWorld {
     protected GraphicsContext gc;
     protected BackgroundImage backgroundImage = null;
     protected BorderPane bpGame;
+    private String currentLoad;
+
+    public String getCurrentLoad() {
+        return currentLoad;
+    }
+
+    public void setCurrentLoad(String currentLoad) {
+        this.currentLoad = currentLoad;
+    }
 
     public BorderPane getBpGame() {
         return bpGame;
@@ -190,6 +199,7 @@ public abstract class GameWorld {
     }
 
     protected void newPopup(Node node) {
+        pause();
         BorderPane bp = new BorderPane();
         final Popup popup = new Popup();
         bp.setBackground(new Background(new BackgroundFill(Color.CORNFLOWERBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -198,6 +208,7 @@ public abstract class GameWorld {
         Button button = new Button("close");
         button.setOnAction(actionEvent -> {
             popup.hide();
+            start();
         });
         bp.setBottom(new ToolBar(button));
 
@@ -282,18 +293,21 @@ public abstract class GameWorld {
             spawn(DroneType.valueOf(comboBox.getValue().toString()));
         });
         arenaEditor.setOnAction(actionEvent -> {
-            pause();
             newPopup(listView(getArena()));
         });
 
 
-        return new ToolBar(start, stop, comboBox, save, load, resetArena, arenaEditor);
+        return new ToolBar(start, pause, stop, comboBox, save, load, resetArena, arenaEditor);
     }
 
     protected void reset() {
-        gc.clearRect(0, 0, SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
-        setArena(new DroneArena());
-        getArena().updateGame(gc);
+        try {
+            gc.clearRect(0, 0, SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
+            setArena(new DroneArena());
+            getArena().updateGame(gc);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     protected abstract void load();
@@ -319,7 +333,11 @@ public abstract class GameWorld {
     }
 
     protected void start() {
-        getTimer().start();
+        try {
+            getTimer().start();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     /**
@@ -331,7 +349,11 @@ public abstract class GameWorld {
     }
 
     protected void pause() {
-        getTimer().stop();
+        try {
+            getTimer().stop();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
 
