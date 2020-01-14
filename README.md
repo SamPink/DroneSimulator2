@@ -15,14 +15,14 @@ Basic structure
  
 ## GUI
  - Menu
-     - Allows drone arena to be configured
-     - Saved and Edited
-     - Loaded (by default load from config)
-     - Run simulation
+     - ~~Allows drone arena to be configured~~
+     - ~~Saved and Edited~~
+     - ~~Loaded (by default load from config)~~
+     - ~~Run simulation~~
      - Help screen
  - Toolbar
-     - Buttons to control the simulation
-     - Start, Stop, Pause, Add objects
+     - ~~Buttons to control the simulation~~
+     - ~~Start, Stop, Pause, Add objects~~
  - Information Panel
      - Text descriptions or graphs
      - Show state of the current arena
@@ -31,8 +31,8 @@ Basic structure
 
 ## Arena / Simulation
 
- - Static and Moving objects
- - Drones which turn when meet walls
+ - ~~Static and Moving objects~~
+ - ~~Drones which turn when meet walls~~
  - Multiple drones with different behaviour
  - Charging stations
  -  Drone should be able to navigate static objects
