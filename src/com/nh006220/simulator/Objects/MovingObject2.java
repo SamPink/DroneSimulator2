@@ -9,6 +9,8 @@ public class MovingObject2 extends MovingObject {
     }
 
     public MovingObject2() {
-        super(75, 75, 2, 0, "images/drone2.jpg", DroneType.MovingObject2);
+        super(30, 30, 2, 0, "images/drone2.png", DroneType.MovingObject2);
+        setHitBoxRange(1.5);
     }
+
 }

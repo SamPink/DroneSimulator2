@@ -34,19 +34,20 @@ import javafx.stage.Stage;
  * @author cdea
  */
 public abstract class GameWorld {
-
     /**
      * The game loop using JavaFX's AnimationTimer class.
      */
     private static AnimationTimer timer;
     /**
-     * Number of frames per second.
-     */
-    private final int framesPerSecond;
-    /**
      * Title in the application window.
      */
     private final String windowTitle;
+    protected Stage stage;
+    protected Pane center;
+    protected Canvas canvas;
+    protected GraphicsContext gc;
+    protected BackgroundImage backgroundImage = null;
+    protected BorderPane bpGame;
     /**
      * The JavaFX Scene as the game surface
      */
@@ -59,14 +60,83 @@ public abstract class GameWorld {
      * The drone manager.
      */
     private DroneArena arena;
-
-    protected Stage stage;
-    protected Pane center = new Pane();
-    protected Canvas canvas;
-    protected GraphicsContext gc;
-    protected BackgroundImage backgroundImage = null;
-    protected BorderPane bpGame;
     private String currentLoad;
+
+
+    /**
+     * Constructor that is called by the derived class. This will
+     * set the frames per second, title, and setup the game loop.
+     *
+     * @param fps   - Frames per second.
+     * @param title - Title of the application window.
+     */
+    public GameWorld(final String title, int fps) {
+        windowTitle = title;
+        // create and set timeline for the game loop
+    }
+
+    /**
+     * The game loop (Timeline) which is used to update, check collisions, and
+     * cleanup sprite objects at every interval (fps).
+     *
+     * @return Timeline An animation running indefinitely representing the game
+     * loop.
+     */
+    protected static AnimationTimer getTimer() {
+        return timer;
+    }
+
+    public static void setTimer(AnimationTimer timer) {
+        GameWorld.timer = timer;
+    }
+
+    public Scene getSurface() {
+        return surface;
+    }
+
+    public void setSurface(Scene surface) {
+        this.surface = surface;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public Pane getCenter() {
+        return center;
+    }
+
+    public void setCenter(Pane center) {
+        this.center = center;
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+    }
+
+    public GraphicsContext getGc() {
+        return gc;
+    }
+
+    public void setGc(GraphicsContext gc) {
+        this.gc = gc;
+    }
+
+    public BackgroundImage getBackgroundImage() {
+        return backgroundImage;
+    }
+
+    public void setBackgroundImage(BackgroundImage backgroundImage) {
+        this.backgroundImage = backgroundImage;
+    }
 
     public String getCurrentLoad() {
         return currentLoad;
@@ -85,60 +155,33 @@ public abstract class GameWorld {
     }
 
     /**
-     * Constructor that is called by the derived class. This will
-     * set the frames per second, title, and setup the game loop.
-     *
-     * @param fps   - Frames per second.
-     * @param title - Title of the application window.
-     */
-    public GameWorld(final String title, int fps) {
-        framesPerSecond = fps;
-        windowTitle = title;
-        // create and set timeline for the game loop
-    }
-
-    /**
-     * The game loop (Timeline) which is used to update, check collisions, and
-     * cleanup sprite objects at every interval (fps).
-     *
-     * @return Timeline An animation running indefinitely representing the game
-     * loop.
-     */
-    protected static AnimationTimer getTimer() {
-        return timer;
-    }
-
-    /**
      * The sets the current game loop for this game world.
      *
      * @param timer Timeline object of an animation running indefinitely
      *              representing the game loop.
      */
-    protected static void setGameLoop(AnimationTimer timer) {
+    protected void setGameLoop(AnimationTimer timer) {
         GameWorld.timer = timer;
     }
 
     /**
      * Initialize the game world by update the JavaFX Stage.
+     * Goes to menu screen
      *
      * @param primaryStage The main window containing the JavaFX Scene.
      */
     public abstract void initialize(final Stage primaryStage);
 
+    /**
+     * Creates the menu screen
+     *
+     * @return Menu pane
+     */
     public abstract Pane createMenu();
 
     public abstract Pane createGame();
 
     protected abstract void onFrame();
-
-    /**
-     * Returns the frames per second.
-     *
-     * @return int The frames per second.
-     */
-    protected int getFramesPerSecond() {
-        return framesPerSecond;
-    }
 
     /**
      * Returns the game's window title.
@@ -157,10 +200,6 @@ public abstract class GameWorld {
      */
     public DroneArena getArena() {
         return arena;
-    }
-
-    protected Object getObject(int i) {
-        return arena.getObjectManager().getAllObjects().get(i);
     }
 
     public void setArena(DroneArena arena) {
@@ -198,6 +237,10 @@ public abstract class GameWorld {
         return scene;
     }
 
+    public void setScene(Pane scene) {
+        this.scene = scene;
+    }
+
     protected void newPopup(Node node) {
         pause();
         BorderPane bp = new BorderPane();
@@ -216,10 +259,12 @@ public abstract class GameWorld {
 
         popup.getContent().add(bp);
         popup.show(stage);
+
+
     }
 
     protected Node listView(DroneArena arena) {
-        ListView arenaContent = new ListView();
+        ListView<String> arenaContent = new ListView<>();
         arenaContent.setMinWidth(400);
 
         for (Object obj : arena.getObjectManager().getAllObjects()) {
@@ -282,7 +327,7 @@ public abstract class GameWorld {
         Button arenaEditor = new Button("Edit Arena");
 
 
-        ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(DroneType.values()));
+        ComboBox<? extends DroneType> comboBox = new ComboBox<>(FXCollections.observableArrayList(DroneType.values()));
 
         start.setOnAction(actionEvent -> start());
         pause.setOnAction(actionEvent -> pause());
@@ -314,7 +359,6 @@ public abstract class GameWorld {
     protected abstract void load();
 
     protected abstract void save(DroneArena arena);
-
 
     /**
      * Sets the JavaFX Group that will hold all JavaFX nodes which are rendered
@@ -357,12 +401,7 @@ public abstract class GameWorld {
         }
     }
 
-
     protected void spawn(DroneType droneType) {
         getArena().getObjectManager().addObject(droneType);
-    }
-
-    protected void spawn() {
-
     }
 }

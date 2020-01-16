@@ -6,13 +6,11 @@ import com.nh006220.simulator.Objects.MovingObject1;
 import com.nh006220.simulator.Objects.MovingObject2;
 import com.nh006220.simulator.Objects.StaticObject1;
 import javafx.animation.AnimationTimer;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -21,7 +19,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,17 +29,25 @@ public class Simulation2 extends GameWorld {
         super(title, fps);
     }
 
+    /**
+     * Initialize the game world by update the JavaFX Stage.
+     * Goes to menu screen
+     *
+     * @param primaryStage The main window containing the JavaFX Scene.
+     */
     @Override
     public void initialize(Stage primaryStage) {
-        stage = primaryStage;
-
+        setCenter(new Pane());
+        setStage(primaryStage);
         primaryStage.setTitle(getWindowTitle());
-
-        setSceneNodes(createMenu());
-        setGameSurface(new Scene(getScene(), SETTINGS.SceneWidth, SETTINGS.SceneHeight));
-        primaryStage.setScene(getGameSurface());
+        updateScene(createMenu());
     }
 
+    /**
+     * Creates the menu screen
+     *
+     * @return Menu pane
+     */
     @Override
     public Pane createMenu() {
         BorderPane bp = new BorderPane();
@@ -57,7 +62,7 @@ public class Simulation2 extends GameWorld {
 
         newGame.setOnAction(actionEvent -> updateScene(arenaBuilder()));
         openGame.setOnAction(actionEvent -> load());
-        openHelp.setOnAction(actionEvent -> updateScene(new Pane(new TextArea("Helpful information"))));
+        openHelp.setOnAction(actionEvent -> updateScene(createHelp()));
 
         VBox vBox = new VBox(newGame, openGame, settings, openHelp);
 
@@ -72,7 +77,19 @@ public class Simulation2 extends GameWorld {
         return bp;
     }
 
-    private <TODO> Pane createGame(DroneArena arena) {
+    private Pane createHelp() {
+        Text help = new Text("help");
+        Button goBackText = new Button("Go back");
+
+
+        TableView tableView = new TableView<>();
+
+        goBackText.setOnAction(actionEvent -> updateScene(createMenu()));
+
+        return new HBox(help, goBackText);
+    }
+
+    private Pane createGame(DroneArena arena) {
         bpGame = new BorderPane();
 
         setArena(arena);
@@ -111,10 +128,6 @@ public class Simulation2 extends GameWorld {
         start();
 
         return bpGame;
-    }
-
-    private void clearArena() {
-        setArena(new DroneArena());
     }
 
     protected void save(DroneArena arena) {
@@ -160,7 +173,7 @@ public class Simulation2 extends GameWorld {
     protected void load() {
         SaveAndLoad saveAndLoad = new SaveAndLoad();
 
-        ListView listView = new ListView();
+        ListView<String> listView = new ListView<String>();
 
         for (String s : getFilesInDirectory()) {
             listView.getItems().add(s);
@@ -170,12 +183,12 @@ public class Simulation2 extends GameWorld {
 
         select.setOnAction(actionEvent -> {
             DroneArenaSave d = saveAndLoad.loadFromFile(
-                    listView.getSelectionModel().getSelectedItem().toString()
+                    listView.getSelectionModel().getSelectedItem()
             );
 
             DroneArena arena = d.arenaLoad();
 
-            setCurrentLoad(listView.getSelectionModel().getSelectedItem().toString());
+            setCurrentLoad(listView.getSelectionModel().getSelectedItem());
 
             arena.logGame();
 
@@ -262,9 +275,5 @@ public class Simulation2 extends GameWorld {
 
         backgroundImage = new BackgroundImage(image,
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-    }
-
-    private Pane loadMenu() throws IOException {
-        return FXMLLoader.load(getClass().getResource("menu.fxml"));
     }
 }

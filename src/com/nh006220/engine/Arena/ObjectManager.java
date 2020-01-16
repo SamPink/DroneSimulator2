@@ -4,6 +4,7 @@ import com.nh006220.engine.ObjectTemplates.DroneType;
 import com.nh006220.engine.ObjectTemplates.MovingObject;
 import com.nh006220.engine.ObjectTemplates.Object;
 import com.nh006220.engine.ObjectTemplates.StaticObject;
+import com.nh006220.simulator.Objects.BigDrone;
 import com.nh006220.simulator.Objects.MovingObject1;
 import com.nh006220.simulator.Objects.MovingObject2;
 import com.nh006220.simulator.Objects.StaticObject1;
@@ -42,32 +43,33 @@ public class ObjectManager implements Serializable {
     }
 
     public boolean addMovingObject(MovingObject obj, int posX, int posY) {
-
         obj.setPos(posX, posY);
-
         if (canAddObject(obj)) {
             movingObjects.add(obj);
             return true;
-        } else {
-            System.out.println("oh fuck");
-            return false;
         }
+
+        return false;
     }
 
     public void addMovingObject(MovingObject obj) {
+        int x = 0;
         Random r = new Random();
 
-        addMovingObject(obj, (r.nextInt(SETTINGS.CanvasWidth) - 50), (r.nextInt(SETTINGS.CanvasHeight) - 50));
+        while (x <= 1000) {
+            if (!addMovingObject(obj, (r.nextInt(SETTINGS.CanvasWidth) - 50), (r.nextInt(SETTINGS.CanvasHeight) - 50))) {
+                x++;
+            } else {
+                break;
+            }
+        }
     }
 
     public void addObject(DroneType droneType) {
-        if (droneType == DroneType.MovingObject1) {
-            addMovingObject(new MovingObject1());
-        } else if (droneType == DroneType.MovingObject2) {
-            addMovingObject(new MovingObject2());
-        } else if (droneType == DroneType.StaticObject1) {
-            addStaticObject(new StaticObject1());
-        }
+        if (droneType == DroneType.MovingObject1) addMovingObject(new MovingObject1());
+        else if (droneType == DroneType.MovingObject2) addMovingObject(new MovingObject2());
+        else if (droneType == DroneType.StaticObject1) addStaticObject(new StaticObject1());
+        else if (droneType == DroneType.BigDrone) addMovingObject(new BigDrone());
     }
 
     private void addStaticObject(StaticObject staticObject) {

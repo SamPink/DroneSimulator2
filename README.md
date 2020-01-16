@@ -24,9 +24,9 @@ Basic structure
      - ~~Buttons to control the simulation~~
      - ~~Start, Stop, Pause, Add objects~~
  - Information Panel
-     - Text descriptions or graphs
-     - Show state of the current arena
-     - Show contents of the arena 
+     - ~~Text descriptions or graphs~~
+     - ~~Show state of the current arena~~
+     - ~~Show contents of the arena~~ 
  - Feedback to the user instead of crashing
 
 ## Arena / Simulation

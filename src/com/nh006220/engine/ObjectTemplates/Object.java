@@ -87,6 +87,18 @@ public abstract class Object {
         return rectangle;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setRectangle(Rectangle rectangle) {
+        this.rectangle = rectangle;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
     public int getRotate() {
         return (int) rectangle.getRotate();
     }
@@ -94,6 +106,14 @@ public abstract class Object {
     public void setPos(int posX, int posY) {
         rectangle.setTranslateX(posX);
         rectangle.setTranslateY(posY);
+    }
+
+    public void setX(int x) {
+        rectangle.setTranslateX(x);
+    }
+
+    public void setY(int y) {
+        rectangle.setTranslateY(y);
     }
 
     public Image getImage() {

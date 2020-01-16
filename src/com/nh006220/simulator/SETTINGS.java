@@ -8,6 +8,5 @@ public enum SETTINGS {
     public static int SceneHeight = 750;
     public static int GroundOnBackgroundImage = 589;
 
-
     //TODO integrate settings and GameWorld
 }
