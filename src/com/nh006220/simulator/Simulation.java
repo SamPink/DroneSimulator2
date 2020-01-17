@@ -1,8 +1,9 @@
 package com.nh006220.simulator;
 
 import com.nh006220.engine.Arena.DroneArena;
-import com.nh006220.engine.GameWorld2;
+import com.nh006220.engine.GameWorld;
 import com.nh006220.engine.ObjectTemplates.DroneType;
+import com.nh006220.engine.SETTINGS;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
@@ -19,7 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class Simulation3 extends GameWorld2 {
+public class Simulation extends GameWorld {
     private BorderPane bpGame;
     private GraphicsContext gc;
 
@@ -50,7 +51,7 @@ public class Simulation3 extends GameWorld2 {
         pane.setTranslateY(500);
         pane.setPadding(new Insets(300));
 
-        bp.setTop(newToolbar());
+        //bp.setTop(newToolbar());
         bp.setCenter(pane);
 
         return bp;
@@ -71,9 +72,9 @@ public class Simulation3 extends GameWorld2 {
 
         newTimer();
 
-        Canvas canvas = new Canvas(SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
+        setCanvas(new Canvas(SETTINGS.CanvasWidth, SETTINGS.CanvasHeight));
 
-        setGc(canvas.getGraphicsContext2D());
+        setGc(getCanvas().getGraphicsContext2D());
 
         getGc().clearRect(0, 0, SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
 
@@ -81,7 +82,7 @@ public class Simulation3 extends GameWorld2 {
         background.getGraphicsContext2D().setFill(Color.BLUE);
 
         pane.getChildren().add(background);
-        pane.getChildren().add(canvas);
+        pane.getChildren().add(getCanvas());
 
         background.toFront();
 
@@ -145,7 +146,8 @@ public class Simulation3 extends GameWorld2 {
 
         Button start = new Button("Start current");
         start.setOnAction(actionEvent -> setScene(newGame(arena)));
-        addObjects.getChildren().add(start);
+
+        addObjects.getChildren().addAll(rotateAll, start);
         addObjects.setSpacing(10);
         addObjects.setPadding(new Insets(10));
 
@@ -175,6 +177,7 @@ public class Simulation3 extends GameWorld2 {
 
         ComboBox<? extends DroneType> comboBox = new ComboBox<>(FXCollections.observableArrayList(DroneType.values()));
 
+
         start.setOnAction(actionEvent -> start());
         pause.setOnAction(actionEvent -> pause());
         stop.setOnAction(actionEvent -> pause());
@@ -194,6 +197,7 @@ public class Simulation3 extends GameWorld2 {
     }
 
     private void reset() {
+        setScene(newGame(new DroneArena()));
     }
 
     @Override

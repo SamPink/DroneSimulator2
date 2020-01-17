@@ -2,12 +2,10 @@ package com.nh006220.engine.Arena;
 
 import com.nh006220.engine.ObjectTemplates.MovingObject;
 import com.nh006220.engine.ObjectTemplates.StaticObject;
-import com.nh006220.simulator.SETTINGS;
+import com.nh006220.engine.SETTINGS;
 import javafx.scene.canvas.GraphicsContext;
 
-import java.io.Serializable;
-
-public class DroneArena implements Serializable {
+public class DroneArena {
     private DroneActions droneActions;
     private int width, height;
     private ObjectManager objectManager;
@@ -49,18 +47,18 @@ public class DroneArena implements Serializable {
         for (MovingObject m : objectManager.getMovingObjects()) {
             m.update();
 
-            if (!m.getColliding() && m.isColliding(objectManager)) m.onCollision();
+            if (!m.getColliding() && m.isColliding(objectManager)) {
+                m.onCollision();
+            } else {
+                m.move();
+            }
 
             if (!m.isAlive()) getObjectManager().removeMoving(m);
 
             m.draw(gc);
         }
 
-        //TODO don't draw these every frame, maybe draw every time something happens to them
-        for (StaticObject s : objectManager.getStaticObjects()) {
-            s.update();
-            s.draw(gc);
-        }
+        for (StaticObject s : objectManager.getStaticObjects()) s.draw(gc);
     }
 
     public void logGame() {

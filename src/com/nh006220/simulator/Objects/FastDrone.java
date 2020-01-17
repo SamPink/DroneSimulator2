@@ -9,9 +9,9 @@ public class FastDrone extends MovingObject {
     }
 
     public FastDrone() {
-        super(50, 50, 1, 0, "images/drone1.png", DroneType.MovingObject1);
+        super(50, 50, 1, 0, "images/drone3.png", DroneType.FastDrone);
         setDrawHitBox(false);
         setHealth(1000);
-        setVelMultiply(2);
+        setVelMultiply(5);
     }
 }

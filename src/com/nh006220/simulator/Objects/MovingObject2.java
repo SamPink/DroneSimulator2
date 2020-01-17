@@ -13,4 +13,8 @@ public class MovingObject2 extends MovingObject {
         setHitBoxRange(1.5);
     }
 
+    @Override
+    public void move() {
+        super.move();
+    }
 }

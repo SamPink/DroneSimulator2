@@ -1,6 +1,6 @@
 package com.nh006220.engine.ObjectTemplates;
 
-import com.nh006220.simulator.Simulation2;
+import com.nh006220.simulator.Simulation;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -76,6 +76,14 @@ public abstract class Object {
         return (int) rectangle.getHeight();
     }
 
+    public void setWidth(int value) {
+        rectangle.setWidth(value);
+    }
+
+    public void setHeight(int value) {
+        rectangle.setHeight(value);
+    }
+
     public Point2D getVelocity() {
         return velocity;
     }
@@ -122,7 +130,7 @@ public abstract class Object {
     }
 
     public void setImage(String image) {
-        this.image = new Image(Simulation2.class.getResourceAsStream(image));
+        this.image = new Image(Simulation.class.getResourceAsStream(image));
     }
 
     /**
@@ -180,4 +188,5 @@ public abstract class Object {
     public void setMoving(boolean moving) {
         this.moving = moving;
     }
+
 }

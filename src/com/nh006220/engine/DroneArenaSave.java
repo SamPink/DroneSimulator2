@@ -1,4 +1,4 @@
-package com.nh006220.simulator;
+package com.nh006220.engine;
 
 import com.nh006220.engine.Arena.DroneArena;
 import com.nh006220.engine.ObjectTemplates.DroneType;
@@ -64,6 +64,11 @@ public class DroneArenaSave implements Serializable {
                         object.yPos);
             } else if (object.droneType == DroneType.FastDrone) {
                 arena.getObjectManager().addMovingObject(new FastDrone(object.width, object.height, object.xVel, object.yVel, object.image, object.droneType),
+                        object.xPos,
+                        object.yPos);
+            } else if (object.droneType == DroneType.building) {
+                arena.getObjectManager().addStaticObject(
+                        new Building(object.width, object.height, object.image, object.droneType),
                         object.xPos,
                         object.yPos);
             }

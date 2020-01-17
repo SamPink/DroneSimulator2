@@ -4,8 +4,8 @@ import com.nh006220.engine.ObjectTemplates.DroneType;
 import com.nh006220.engine.ObjectTemplates.MovingObject;
 import com.nh006220.engine.ObjectTemplates.Object;
 import com.nh006220.engine.ObjectTemplates.StaticObject;
+import com.nh006220.engine.SETTINGS;
 import com.nh006220.simulator.Objects.*;
-import com.nh006220.simulator.SETTINGS;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -68,6 +68,7 @@ public class ObjectManager implements Serializable {
         else if (droneType == DroneType.StaticObject1) addStaticObject(new StaticObject1());
         else if (droneType == DroneType.BigDrone) addMovingObject(new BigDrone());
         else if (droneType == DroneType.FastDrone) addMovingObject(new FastDrone());
+        else if (droneType == DroneType.building) addStaticObject(new Building());
     }
 
     private void addStaticObject(StaticObject staticObject) {

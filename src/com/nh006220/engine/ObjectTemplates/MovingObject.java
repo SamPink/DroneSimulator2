@@ -1,7 +1,7 @@
 package com.nh006220.engine.ObjectTemplates;
 
 import com.nh006220.engine.Arena.ObjectManager;
-import com.nh006220.simulator.SETTINGS;
+import com.nh006220.engine.SETTINGS;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -18,6 +18,8 @@ public abstract class MovingObject extends Object {
     private double hitBoxRange = 1;
     private boolean drawHitBox;
     private CollisionType collisionType;
+    private Color hitBoxColor;
+    private int changeDirection;
 
 
     public MovingObject(int w, int h, double xVel, double yVel, String image, DroneType droneType) {
@@ -66,8 +68,7 @@ public abstract class MovingObject extends Object {
         if (isAlive()) {
             super.draw(gc);
             if (drawHitBox = true) {
-                gc.setFill(Color.BLUE);
-                gc.setStroke(Color.RED);
+                gc.setStroke(getHealthColor());
                 gc.strokeRect(getX(), getY(), hitBox.getWidth(), hitBox.getWidth());
             }
         }
@@ -83,6 +84,7 @@ public abstract class MovingObject extends Object {
             super.update();
             hitBox.setTranslateX(getX());
             hitBox.setTranslateY(getY());
+            hitBoxColor = getHealthColor();
         }
     }
 
@@ -161,14 +163,18 @@ public abstract class MovingObject extends Object {
         Random random = new Random();
         if (getCollisionType() == CollisionType.Object) {
             if (getCollidingWith().isMoving()) {
+                //TODO switch direction not speed
                 Point2D velocity = getVelocity();
                 setVelocity(getCollidingWith().getVelocity());
                 getCollidingWith().setVelocity(velocity);
                 setVelMultiply(getVelMultiply() + 0.01);
-                setHealth(getHealth() - 1);
+                setHealth(getHealth() - 5);
+                if (getCollidingWith().isMoving()) {
+                    MovingObject collidingWith = (MovingObject) getCollidingWith();
+                    collidingWith.setHealth(getHealth() + 5);
+                }
             } else {
-                rotateAngle((int) (((getRotate() + Math.PI)) % (2 * Math.PI)));
-                setVelMultiply(1.1);
+                rotateAngle(60);
             }
         } else if (getCollisionType() == CollisionType.Left) {
             //left wall opposite direction
@@ -215,5 +221,27 @@ public abstract class MovingObject extends Object {
         this.collisionType = collisionType;
     }
 
+    public Color getHealthColor() {
+        int i = 255 - 2 * (100 - getHealth());
+        if (i > 255) i = 255;
+        return hitBoxColor = Color.rgb(i, 0, 0);
+    }
+
+    public void move() {
+        if (changeDirection > 100) {
+            Random r = new Random();
+            rotateAngle(getRotate() + r.nextInt(50) % 360);
+            changeDirection = 0;
+        } else changeDirection++;
+
+    }
+
+    public Color getHitBoxColor() {
+        return hitBoxColor;
+    }
+
+    public void setHitBoxColor(Color hitBoxColor) {
+        this.hitBoxColor = hitBoxColor;
+    }
 }
 

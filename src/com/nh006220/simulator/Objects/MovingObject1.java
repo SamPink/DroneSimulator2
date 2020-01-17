@@ -14,4 +14,6 @@ public class MovingObject1 extends MovingObject {
         super(50, 50, 1, 0, "images/drone1.png", DroneType.MovingObject1);
         setDrawHitBox(false);
     }
+
+
 }

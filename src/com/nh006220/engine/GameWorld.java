@@ -1,250 +1,120 @@
 package com.nh006220.engine;
 
 import com.nh006220.engine.Arena.DroneArena;
-import com.nh006220.engine.ObjectTemplates.DroneType;
 import com.nh006220.engine.ObjectTemplates.Object;
-import com.nh006220.simulator.SETTINGS;
 import javafx.animation.AnimationTimer;
-import javafx.collections.FXCollections;
+import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * This application demonstrates a JavaFX 2.x Game Loop.
- * Shown below are the methods which comprise of the fundamentals to a
- * simple game loop in JavaFX:
- * <pre>
- *  <b>initialize()</b> - Initialize the game world.
- *  <b>beginGameLoop()</b> - Creates a JavaFX Timeline object containing the game life cycle.
- *  <b>updateSprites()</b> - Updates the sprite objects each period (per frame)
- *  <b>checkCollisions()</b> - Method will determine objects that collide with each other.
- *  <b>cleanupSprites()</b> - Any sprite objects needing to be removed from play.
- * </pre>
- *
- * @author cdea
- */
-public abstract class GameWorld {
+public abstract class GameWorld extends Application {
     /**
-     * The game loop using JavaFX's AnimationTimer class.
+     * the top level element of the game
      */
-    private static AnimationTimer timer;
+    private Stage stage;
+
     /**
-     * Title in the application window.
+     * title of the main window
      */
-    private final String windowTitle;
-    protected Stage stage;
-    protected Pane center;
-    protected Canvas canvas;
-    protected GraphicsContext gc;
-    protected BackgroundImage backgroundImage = null;
-    protected BorderPane bpGame;
+    private String title;
+
     /**
-     * The JavaFX Scene as the game surface
+     * name of current loaded file
      */
-    private Scene surface;
+    private String currentLoad = "";
+
     /**
-     * All nodes to be displayed in the game window.
+     * running game timer
      */
-    private Pane scene;
+    private AnimationTimer timer;
+
     /**
-     * The drone manager.
+     * stores game arena
      */
     private DroneArena arena;
-    private String currentLoad;
+
+    private GraphicsContext gc;
+
+    private Canvas canvas;
 
 
     /**
-     * Constructor that is called by the derived class. This will
-     * set the frames per second, title, and setup the game loop.
+     * Creates initial scene
+     * by default will open new Menu
      *
-     * @param fps   - Frames per second.
-     * @param title - Title of the application window.
+     * @param stage root element of the game
      */
-    public GameWorld(final String title, int fps) {
-        windowTitle = title;
-        // create and set timeline for the game loop
+    protected void initialize(Stage stage) {
+        setStage(stage);
+        stage.setTitle(getTitle());
+        stage.setResizable(false);
+
+        setScene(newMenu());
+
+        stage.show();
     }
 
     /**
-     * The game loop (Timeline) which is used to update, check collisions, and
-     * cleanup sprite objects at every interval (fps).
+     * Creates new menu pane
      *
-     * @return Timeline An animation running indefinitely representing the game
-     * loop.
+     * @return menu pane
      */
-    protected static AnimationTimer getTimer() {
-        return timer;
-    }
-
-    public static void setTimer(AnimationTimer timer) {
-        GameWorld.timer = timer;
-    }
-
-    public Scene getSurface() {
-        return surface;
-    }
-
-    public void setSurface(Scene surface) {
-        this.surface = surface;
-    }
-
-    public Stage getStage() {
-        return stage;
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    public Pane getCenter() {
-        return center;
-    }
-
-    public void setCenter(Pane center) {
-        this.center = center;
-    }
-
-    public Canvas getCanvas() {
-        return canvas;
-    }
-
-    public void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
-    }
-
-    public GraphicsContext getGc() {
-        return gc;
-    }
-
-    public void setGc(GraphicsContext gc) {
-        this.gc = gc;
-    }
-
-    public BackgroundImage getBackgroundImage() {
-        return backgroundImage;
-    }
-
-    public void setBackgroundImage(BackgroundImage backgroundImage) {
-        this.backgroundImage = backgroundImage;
-    }
-
-    public String getCurrentLoad() {
-        return currentLoad;
-    }
-
-    public void setCurrentLoad(String currentLoad) {
-        this.currentLoad = currentLoad;
-    }
-
-    public BorderPane getBpGame() {
-        return bpGame;
-    }
-
-    public void setBpGame(BorderPane bpGame) {
-        this.bpGame = bpGame;
-    }
+    protected abstract Pane newMenu();
 
     /**
-     * The sets the current game loop for this game world.
+     * Creates game pane
      *
-     * @param timer Timeline object of an animation running indefinitely
-     *              representing the game loop.
+     * @return game pane
      */
-    protected void setGameLoop(AnimationTimer timer) {
-        GameWorld.timer = timer;
-    }
+    protected abstract Pane newGame(DroneArena arena);
 
     /**
-     * Initialize the game world by update the JavaFX Stage.
-     * Goes to menu screen
+     * Creates new help pane
      *
-     * @param primaryStage The main window containing the JavaFX Scene.
+     * @return help pane
      */
-    public abstract void initialize(final Stage primaryStage);
+    protected abstract Pane newHelp();
 
     /**
-     * Creates the menu screen
+     * creates a new arena builder
      *
-     * @return Menu pane
+     * @return arena builder
      */
-    public abstract Pane createMenu();
-
-    public abstract Pane createGame();
-
-    protected abstract void onFrame();
+    protected abstract Pane newArenaBuilder(DroneArena arena);
 
     /**
-     * Returns the game's window title.
+     * creates new toolbar
      *
-     * @return String The game's window title.
+     * @return toolbar
      */
-    public String getWindowTitle() {
-        return windowTitle;
-    }
+    protected abstract ToolBar newToolbar();
 
     /**
-     * Returns the sprite manager containing the sprite objects to
-     * manipulate in the game.
+     * creates a new popup window to add game options to
      *
-     * @return SpriteManager The sprite manager.
+     * @param node element to display in center of popup
+     * @return popup element
      */
-    public DroneArena getArena() {
-        return arena;
-    }
-
-    public void setArena(DroneArena arena) {
-        this.arena = arena;
-    }
-
-    /**
-     * Returns the JavaFX Scene. This is called the game surface to
-     * allow the developer to add JavaFX Node objects onto the Scene.
-     *
-     * @return Scene The JavaFX scene graph.
-     */
-    public Scene getGameSurface() {
-        return surface;
-    }
-
-    /**
-     * Sets the JavaFX Scene. This is called the game surface to
-     * allow the developer to add JavaFX Node objects onto the Scene.
-     *
-     * @param gameSurface The main game surface (JavaFX Scene).
-     */
-    protected void setGameSurface(Scene gameSurface) {
-        this.surface = gameSurface;
-    }
-
-    /**
-     * All JavaFX nodes which are rendered onto the game surface(Scene) is
-     * a JavaFX Group object.
-     *
-     * @return Group The root containing many child nodes to be displayed into
-     * the Scene area.
-     */
-    public Pane getScene() {
-        return scene;
-    }
-
-    public void setScene(Pane scene) {
-        this.scene = scene;
-    }
-
-    protected void newPopup(Node node) {
+    protected final Popup newPopup(Node node) {
         pause();
+
         BorderPane bp = new BorderPane();
-        final Popup popup = new Popup();
+        Popup popup = new Popup();
+
         bp.setBackground(new Background(new BackgroundFill(Color.CORNFLOWERBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
         bp.setPrefSize(300, 300);
 
@@ -258,16 +128,17 @@ public abstract class GameWorld {
         bp.setCenter(node);
 
         popup.getContent().add(bp);
+
         popup.show(stage);
 
-
+        return popup;
     }
 
-    protected Node listView(DroneArena arena) {
+    protected Node newListView(DroneArena a) {
         ListView<String> arenaContent = new ListView<>();
         arenaContent.setMinWidth(400);
 
-        for (Object obj : arena.getObjectManager().getAllObjects()) {
+        for (Object obj : a.getObjectManager().getAllObjects()) {
             arenaContent.getItems().add(obj.toString());
         }
 
@@ -275,14 +146,14 @@ public abstract class GameWorld {
             int i = arenaContent.getSelectionModel().getSelectedIndex();
 
             newPopup(
-                    setDroneMenu(arena.getObjectManager().getAllObjects().get(i))
+                    newDroneMenu(a.getObjectManager().getAllObjects().get(i))
             );
         });
 
         return arenaContent;
     }
 
-    protected Pane setDroneMenu(Object i) {
+    protected Pane newDroneMenu(Object i) {
         Slider speed = new Slider(0, 10, 1);
         speed.setValue(i.getVelMultiply());
         speed.setShowTickLabels(true);
@@ -298,12 +169,43 @@ public abstract class GameWorld {
         Slider posX = new Slider(0, SETTINGS.CanvasWidth, 5);
         posX.setShowTickLabels(true);
         posX.setValue(i.getX());
+        posX.onDragDetectedProperty().addListener(observable -> {
+
+            System.out.println("hey");
+            i.setX((int) posX.getValue());
+            i.draw(getGc());
+        });
         Slider posY = new Slider(0, SETTINGS.CanvasHeight, 5);
+        posY.onDragDetectedProperty().addListener(observable -> {
+            i.setY((int) posY.getValue());
+            i.draw(getGc());
+        });
         posY.setShowTickLabels(true);
         posY.setValue(i.getY());
 
         HBox setX = new HBox(new Text("Set x"), posX);
         HBox setY = new HBox(new Text("Set y"), posY);
+
+        Slider width = new Slider(0, 100, 5);
+        width.setShowTickLabels(true);
+        width.setValue(i.getWidth());
+
+        width.onDragDetectedProperty().addListener(observable -> {
+            i.setWidth((int) width.getValue());
+            i.draw(getGc());
+        });
+
+        Slider height = new Slider(0, 100, 5);
+        height.setShowTickLabels(true);
+        height.setValue(i.getHeight());
+
+        height.onDragDetectedProperty().addListener(observable -> {
+            i.setHeight((int) height.getValue());
+            i.draw(getGc());
+        });
+
+        HBox setWidth = new HBox(new Text("Set width"), posX);
+        HBox setHeight = new HBox(new Text("Set height"), posY);
 
         Button store = new Button("save");
 
@@ -311,97 +213,226 @@ public abstract class GameWorld {
             i.setVelMultiply((int) speed.getValue());
             i.rotateAngle((int) rotation.getValue());
             i.setPos((int) posX.getValue(), (int) posY.getValue());
-
+            i.setWidth((int) width.getValue());
+            i.setHeight((int) height.getValue());
             System.out.println(i.toString());
         });
-        return new VBox(setSpeed, setRotation, setX, setY, store);
-    }
 
-    protected ToolBar getToolBar() {
-        Button start = new Button("Start");
-        Button pause = new Button("Pause");
-        Button stop = new Button("Stop");
-        Button save = new Button("Save");
-        Button load = new Button("Load");
-        Button resetArena = new Button("Reset arena");
-        Button arenaEditor = new Button("Edit Arena");
-
-
-        ComboBox<? extends DroneType> comboBox = new ComboBox<>(FXCollections.observableArrayList(DroneType.values()));
-
-        start.setOnAction(actionEvent -> start());
-        pause.setOnAction(actionEvent -> pause());
-        stop.setOnAction(actionEvent -> shutdown());
-        save.setOnAction(actionEvent -> save(arena));
-        load.setOnAction(actionEvent -> load());
-        resetArena.setOnAction(actionEvent -> reset());
-        comboBox.setOnAction(actionEvent -> {
-            spawn(DroneType.valueOf(comboBox.getValue().toString()));
-        });
-        arenaEditor.setOnAction(actionEvent -> {
-            newPopup(listView(getArena()));
+        Button setPosOnScreenButton = new Button("Set position on canvas");
+        setPosOnScreenButton.setOnAction(actionEvent -> {
+            getCanvas().setOnMousePressed(mouseEvent -> {
+                i.setPos((int) mouseEvent.getX(), (int) mouseEvent.getY());
+                i.update();
+                getGc().fillRect(mouseEvent.getX(), mouseEvent.getY(), 5, 5);
+                getCanvas().setOnMousePressed(mouseEvent1 -> System.out.println());
+            });
         });
 
 
-        return new ToolBar(start, pause, stop, comboBox, save, load, resetArena, arenaEditor);
+        return new VBox(setSpeed, setRotation, setX, setY, store, setPosOnScreenButton, setWidth, setHeight);
     }
-
-    protected void reset() {
-        try {
-            gc.clearRect(0, 0, SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
-            setArena(new DroneArena());
-            getArena().updateGame(gc);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
-    protected abstract void load();
-
-    protected abstract void save(DroneArena arena);
 
     /**
-     * Sets the JavaFX Group that will hold all JavaFX nodes which are rendered
-     * onto the game surface(Scene) is a JavaFX Group object.
-     *
-     * @param scene The root container having many children nodes
-     *              to be displayed into the Scene area.
+     * create new game timer
      */
-    protected void setSceneNodes(Pane scene) {
-        this.scene = scene;
-    }
+    protected final void newTimer() {
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long l) {
+                onFrame();
+                //TODO onSecond()
+            }
+        };
 
-    protected void updateScene(Pane scene) {
-        setSceneNodes(scene);
-        setGameSurface(new Scene(getScene(), SETTINGS.SceneWidth, SETTINGS.SceneHeight));
-        stage.setScene(getGameSurface());
+        setTimer(timer);
     }
 
     protected void start() {
         try {
             getTimer().start();
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Cant start timer");
         }
-    }
-
-    /**
-     * Stop threads and stop media from playing.
-     */
-    protected void shutdown() {
-        getTimer().stop();
-        updateScene(createMenu());
     }
 
     protected void pause() {
         try {
             getTimer().stop();
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Cant pause");
         }
     }
 
-    protected void spawn(DroneType droneType) {
-        getArena().getObjectManager().addObject(droneType);
+    protected abstract void onFrame();
+
+    protected abstract void onSecond();
+
+    /**
+     * saves passed drone arena to text file
+     *
+     * @param arena arena to save
+     */
+    protected void save(DroneArena arena) {
+        SaveAndLoad saveAndLoad = new SaveAndLoad();
+
+        if (!getCurrentLoad().isEmpty()) {
+            saveAndLoad.setFileName(getCurrentLoad());
+
+            saveAndLoad.saveToFile(arena);
+
+            System.out.println("Saved");
+        } else {
+            TextField textField = new TextField();
+            Button save = new Button("Save name");
+
+            newPopup(new HBox(textField, save));
+
+            save.setOnAction(actionEvent -> {
+                if (textField.getText() != null) {
+
+                    saveAndLoad.setFileName(textField.getText());
+
+                    saveAndLoad.saveToFile(arena);
+
+                    System.out.println("Saved");
+                }
+            });
+        }
+    }
+
+    /**
+     * builds a drone arena from file
+     *
+     * @return configured drone arena
+     */
+    protected void load() {
+        SaveAndLoad saveAndLoad = new SaveAndLoad();
+
+        ListView<String> listView = new ListView<>();
+
+        for (String s : getFilesInDirectory()) {
+            listView.getItems().add(s);
+        }
+
+        Button select = new Button("Open");
+
+        select.setOnAction(actionEvent -> {
+            DroneArenaSave d = saveAndLoad.loadFromFile(
+                    listView.getSelectionModel().getSelectedItem()
+            );
+
+            DroneArena arena = d.arenaLoad();
+
+            setCurrentLoad(listView.getSelectionModel().getSelectedItem());
+
+            arena.logGame();
+
+            //reset();
+            setScene(newArenaBuilder(arena));
+            stage.setTitle(getCurrentLoad().replace(".txt", ""));
+
+        });
+
+        newPopup(new HBox(listView, select));
+    }
+
+
+    /**
+     * gets text files in working directory
+     *
+     * @return game saves
+     */
+    private List<String> getFilesInDirectory() {
+        List<String> saves = new ArrayList<>();
+        File f = new File("."); // current directory
+        File[] files = f.listFiles();
+        for (File file : files) {
+            if (!file.isDirectory() && file.getName().contains(".txt")) {
+                saves.add(file.getName());
+            }
+        }
+        return saves;
+    }
+
+    /**
+     * turns image into background image
+     *
+     * @param s location of image
+     * @return background image
+     */
+    protected BackgroundImage createBackgroundImage(String s) {
+        Image image = new Image(getClass().getResourceAsStream(s));
+
+        return new BackgroundImage(image,
+                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+    }
+
+    /**
+     * set root level pane
+     * used to move between scenes
+     * all scenes in the game have the same size window
+     *
+     * @param pane
+     */
+    protected void setScene(Pane pane) {
+        getStage().setScene(new Scene(pane, SETTINGS.SceneWidth, SETTINGS.SceneHeight));
+    }
+
+    protected DroneArena getArena() {
+        return this.arena;
+    }
+
+    protected void setArena(DroneArena arena) {
+        this.arena = arena;
+    }
+
+    private String getTitle() {
+        return title;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public String getCurrentLoad() {
+        return currentLoad;
+    }
+
+    public void setCurrentLoad(String currentLoad) {
+        this.currentLoad = currentLoad;
+    }
+
+    public AnimationTimer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(AnimationTimer timer) {
+        this.timer = timer;
+    }
+
+    public GraphicsContext getGc() {
+        return gc;
+    }
+
+    public void setGc(GraphicsContext gc) {
+        this.gc = gc;
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+    }
+
+    @Override
+    public void stop() throws Exception {
+        save(getArena());
+        super.stop();
     }
 }
