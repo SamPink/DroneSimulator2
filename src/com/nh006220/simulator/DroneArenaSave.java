@@ -3,10 +3,7 @@ package com.nh006220.simulator;
 import com.nh006220.engine.Arena.DroneArena;
 import com.nh006220.engine.ObjectTemplates.DroneType;
 import com.nh006220.engine.ObjectTemplates.Object;
-import com.nh006220.simulator.Objects.BigDrone;
-import com.nh006220.simulator.Objects.MovingObject1;
-import com.nh006220.simulator.Objects.MovingObject2;
-import com.nh006220.simulator.Objects.StaticObject1;
+import com.nh006220.simulator.Objects.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -63,6 +60,10 @@ public class DroneArenaSave implements Serializable {
                         object.yPos);
             } else if (object.droneType == DroneType.BigDrone) {
                 arena.getObjectManager().addMovingObject(new BigDrone(object.width, object.height, object.xVel, object.yVel, object.image, object.droneType),
+                        object.xPos,
+                        object.yPos);
+            } else if (object.droneType == DroneType.FastDrone) {
+                arena.getObjectManager().addMovingObject(new FastDrone(object.width, object.height, object.xVel, object.yVel, object.image, object.droneType),
                         object.xPos,
                         object.yPos);
             }

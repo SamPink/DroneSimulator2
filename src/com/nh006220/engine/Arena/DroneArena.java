@@ -48,9 +48,11 @@ public class DroneArena implements Serializable {
 
         for (MovingObject m : objectManager.getMovingObjects()) {
             m.update();
-            if (m.isColliding(objectManager)) {
-                m.onCollision();
-            }
+
+            if (!m.getColliding() && m.isColliding(objectManager)) m.onCollision();
+
+            if (!m.isAlive()) getObjectManager().removeMoving(m);
+
             m.draw(gc);
         }
 
@@ -68,5 +70,4 @@ public class DroneArena implements Serializable {
     public void rotateRandom() {
         droneActions.rotateRandom(objectManager);
     }
-
 }

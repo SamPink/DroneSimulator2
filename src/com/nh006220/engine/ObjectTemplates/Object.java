@@ -17,7 +17,8 @@ public abstract class Object {
     private Rectangle rectangle;
     private Point2D velocity;
     private Image image;
-    private int velMultiply = 1;
+    private double velMultiply = 1;
+    private boolean moving = false;
 
     public Object(int w, int h, double xVel, double yVel, String image, DroneType droneType) {
         this.droneType = droneType;
@@ -29,11 +30,11 @@ public abstract class Object {
 
     }
 
-    public int getVelMultiply() {
+    public double getVelMultiply() {
         return velMultiply;
     }
 
-    public void setVelMultiply(int velMultiply) {
+    public void setVelMultiply(double velMultiply) {
         this.velMultiply = velMultiply;
 
         setVelocity(getVelocity().multiply(velMultiply));
@@ -170,5 +171,13 @@ public abstract class Object {
                 " , width=" + getWidth() +
                 ", height=" + getHeight() +
                 " }";
+    }
+
+    public boolean isMoving() {
+        return moving;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
     }
 }

@@ -6,7 +6,7 @@ public enum SETTINGS {
     public static int CanvasHeight = 700;
     public static int SceneWidth = 1700;
     public static int SceneHeight = 750;
-    public static int GroundOnBackgroundImage = 589;
+    public static int GroundOnBackgroundImage = 700;
 
     //TODO integrate settings and GameWorld
 }

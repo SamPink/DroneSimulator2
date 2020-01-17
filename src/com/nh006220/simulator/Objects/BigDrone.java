@@ -10,6 +10,6 @@ public class BigDrone extends MovingObject {
 
     public BigDrone() {
         super(80, 60, 0.5, 3, "images/drone4.png", DroneType.BigDrone);
-        setHitBoxRange(2);
+        //setHitBoxRange(2);
     }
 }

@@ -4,10 +4,7 @@ import com.nh006220.engine.ObjectTemplates.DroneType;
 import com.nh006220.engine.ObjectTemplates.MovingObject;
 import com.nh006220.engine.ObjectTemplates.Object;
 import com.nh006220.engine.ObjectTemplates.StaticObject;
-import com.nh006220.simulator.Objects.BigDrone;
-import com.nh006220.simulator.Objects.MovingObject1;
-import com.nh006220.simulator.Objects.MovingObject2;
-import com.nh006220.simulator.Objects.StaticObject1;
+import com.nh006220.simulator.Objects.*;
 import com.nh006220.simulator.SETTINGS;
 
 import java.io.Serializable;
@@ -70,6 +67,7 @@ public class ObjectManager implements Serializable {
         else if (droneType == DroneType.MovingObject2) addMovingObject(new MovingObject2());
         else if (droneType == DroneType.StaticObject1) addStaticObject(new StaticObject1());
         else if (droneType == DroneType.BigDrone) addMovingObject(new BigDrone());
+        else if (droneType == DroneType.FastDrone) addMovingObject(new FastDrone());
     }
 
     private void addStaticObject(StaticObject staticObject) {
@@ -105,4 +103,8 @@ public class ObjectManager implements Serializable {
                 '}';
     }
 
+    public void removeMoving(MovingObject m) {
+        System.out.println("removed " + m);
+        movingObjects.remove(m);
+    }
 }
