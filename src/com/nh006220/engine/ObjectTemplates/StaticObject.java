@@ -6,7 +6,7 @@ package com.nh006220.engine.ObjectTemplates;
  * object that cant move
  */
 public abstract class StaticObject extends Object {
-    public StaticObject(int width, int height, String image, DroneType droneType) {
+    protected StaticObject(int width, int height, String image, DroneType droneType) {
         super(width, height, 0, 0, image, droneType);
     }
 

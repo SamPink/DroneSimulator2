@@ -9,7 +9,7 @@ import com.nh006220.simulator.Objects.StaticTree;
 /**
  * static class used to load pre set arena into the simulation
  */
-public class SimulationBuilder {
+class SimulationBuilder {
 
     static DroneArena basicArena() {
         DroneArena arena = new DroneArena();

@@ -219,11 +219,6 @@ public class Simulation extends GameWorld {
     }
 
     @Override
-    protected void onSecond() {
-        //TODO implement this
-    }
-
-    @Override
     public void start(Stage stage) {
         initialize(stage);
     }

@@ -69,11 +69,11 @@ public abstract class MovingObject extends Object {
      * @param image     class path image location
      * @param droneType enum type
      */
-    public MovingObject(int w, int h, double xVel, double yVel, String image, DroneType droneType) {
+    protected MovingObject(int w, int h, double xVel, double yVel, String image, DroneType droneType) {
         super(w, h, xVel, yVel, image, droneType);
         health = 100;
         hitBox = new Rectangle(getWidth() * hitBoxRange, getHeight() * hitBoxRange);
-        setMoving(true);
+        setMoving();
     }
 
     public boolean isColliding() {
@@ -125,7 +125,7 @@ public abstract class MovingObject extends Object {
      */
     @Override
     public void update() {
-        if (isAlive() || isInBounds(SETTINGS.CanvasWidth, SETTINGS.CanvasHeight)) {
+        if (isAlive() || isInBounds(SETTINGS.CanvasHeight)) {
             super.update();
             hitBox.setTranslateX(getX());
             hitBox.setTranslateY(getY());
@@ -148,7 +148,7 @@ public abstract class MovingObject extends Object {
      * @return true if colliding, else false
      */
     public boolean isColliding(ObjectManager objectManager) {
-        if (isInBounds(SETTINGS.CanvasWidth, SETTINGS.GroundOnBackgroundImage) || isCollidingWithObject(objectManager))
+        if (isInBounds(SETTINGS.GroundOnBackgroundImage) || isCollidingWithObject(objectManager))
             setColliding(true);
 
         return getColliding();
@@ -176,11 +176,10 @@ public abstract class MovingObject extends Object {
 
     /**
      * @param height of arena
-     * @param width  of arena
      * @return true if drone object is in arena else false
      */
-    private boolean isInBounds(int width, int height) {
-        if ((getX() + getHitBox().getWidth()) > width) {
+    private boolean isInBounds(int height) {
+        if ((getX() + getHitBox().getWidth()) > SETTINGS.CanvasWidth) {
             setCollisionType(CollisionType.Right);
             return true;
         }
@@ -251,8 +250,8 @@ public abstract class MovingObject extends Object {
         return drawHitBox;
     }
 
-    protected void setDrawHitBox(boolean drawHitBox) {
-        this.drawHitBox = drawHitBox;
+    protected void setDrawHitBox() {
+        this.drawHitBox = false;
     }
 
     public boolean isAlive() {

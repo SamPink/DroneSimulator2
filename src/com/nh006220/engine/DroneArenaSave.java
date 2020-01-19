@@ -124,12 +124,15 @@ public class DroneArenaSave implements Serializable {
     /**
      * class used to convert a game object into a serializable format
      */
-    private class DroneStore implements Serializable {
-        private DroneType droneType;
-        private int width, height;
-        private double xVel, yVel;
-        private int xPos, yPos;
-        private String image;
+    private static class DroneStore implements Serializable {
+        private final DroneType droneType;
+        private final int width;
+        private final int height;
+        private final double xVel;
+        private final double yVel;
+        private final int xPos;
+        private final int yPos;
+        private final String image;
 
         /**
          * @param droneType enum class storing drone type

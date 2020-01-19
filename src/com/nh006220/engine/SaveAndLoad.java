@@ -9,10 +9,6 @@ import java.io.*;
  * uses drone arena DroneArenaSave to convert to a from a serializable format
  */
 class SaveAndLoad {
-    /**
-     * Stores arena to be saved and loaded
-     */
-    private DroneArena arena;
 
     /**
      * default file save name
@@ -31,7 +27,6 @@ class SaveAndLoad {
      * @param arena to save
      */
     void saveToFile(DroneArena arena) {
-        this.arena = arena;
 
         try {
             FileOutputStream f = new FileOutputStream(new File(fileName));

@@ -59,7 +59,7 @@ public abstract class Object {
      * @param image     class path for image
      * @param droneType enum type
      */
-    public Object(int w, int h, double xVel, double yVel, String image, DroneType droneType) {
+    Object(int w, int h, double xVel, double yVel, String image, DroneType droneType) {
         this.droneType = droneType;
         this.rectangle = new Rectangle(w, h);
         this.velocity = new Point2D(xVel, yVel);
@@ -163,7 +163,7 @@ public abstract class Object {
         return image;
     }
 
-    public void setImage(String image) {
+    private void setImage(String image) {
         this.image = new Image(Simulation.class.getResourceAsStream(image));
     }
 
@@ -221,8 +221,8 @@ public abstract class Object {
         return moving;
     }
 
-    void setMoving(boolean moving) {
-        this.moving = moving;
+    void setMoving() {
+        this.moving = true;
     }
 
 }

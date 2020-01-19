@@ -23,7 +23,8 @@ public class DroneArena {
     /**
      * Size width and height of the arenas
      */
-    private int width, height;
+    private final int width;
+    private final int height;
     /**
      * class used to manage storing game objects
      */

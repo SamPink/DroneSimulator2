@@ -16,15 +16,16 @@ import java.util.Random;
  * managers the adding and removing of game objects
  * stores an arrayList of both moving and static objects
  */
+@SuppressWarnings("SuspiciousMethodCalls")
 public class ObjectManager {
     /**
      * stores moving objects in the game
      */
-    private List<MovingObject> movingObjects;
+    private final List<MovingObject> movingObjects;
     /**
      * stores static objects in the game
      */
-    private List<StaticObject> staticObjects;
+    private final List<StaticObject> staticObjects;
 
     /**
      * default constructor
@@ -109,7 +110,7 @@ public class ObjectManager {
     }
 
     /**
-     * addds static object to random location
+     * adds static object to random location
      *
      * @param staticObject object to add
      */

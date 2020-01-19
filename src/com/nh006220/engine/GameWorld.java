@@ -117,9 +117,8 @@ public abstract class GameWorld extends Application {
      * creates a new popup window to add game options to
      *
      * @param node element to display in center of popup
-     * @return popup element
      */
-    protected final Popup newPopup(Node node) {
+    protected final void newPopup(Node node) {
         pause();
 
         BorderPane bp = new BorderPane();
@@ -141,7 +140,6 @@ public abstract class GameWorld extends Application {
 
         popup.show(stage);
 
-        return popup;
     }
 
     /**
@@ -302,11 +300,6 @@ public abstract class GameWorld extends Application {
      * method called on each tick of animation timer
      */
     protected abstract void onFrame();
-
-    /**
-     * method called each second
-     */
-    protected abstract void onSecond();
 
     /**
      * saves passed drone arena to text file
