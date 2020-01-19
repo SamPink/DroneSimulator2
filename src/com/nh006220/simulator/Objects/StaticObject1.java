@@ -10,7 +10,7 @@ public class StaticObject1 extends StaticObject {
     }
 
     public StaticObject1() {
-        super(100, 100, "images/background.jpg", DroneType.StaticObject1);
+        super(200, 200, "images/house1.png", DroneType.StaticObject1);
         //setName("Static Object 1");
     }
 }

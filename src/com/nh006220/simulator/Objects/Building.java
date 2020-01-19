@@ -9,7 +9,7 @@ public class Building extends StaticObject {
     }
 
     public Building() {
-        super(75, 175, "images/building.png", DroneType.building);
+        super(200, 175, "images/building.png", DroneType.building);
         //setName("Static Object 1");
     }
 }

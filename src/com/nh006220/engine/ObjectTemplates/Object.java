@@ -9,25 +9,62 @@ import javafx.scene.shape.Rectangle;
 
 import java.text.DecimalFormat;
 
+/**
+ * parent game object from which all other objects inherit
+ * objects location is based of a JavaFx shape object
+ * velocity of object is based of a JAvaFx point2D
+ * the view of the object is an image drawn at location of shape
+ */
 public abstract class Object {
+    /**
+     * class path to location of image to be shown
+     */
     private final String imageString;
+    /**
+     * enum type
+     */
     private DroneType droneType;
-    private int id;
+    /**
+     * name of the drone object
+     */
     private String name;
+    /**
+     * shape used to keep the location of the object in the arena
+     */
     private Rectangle rectangle;
+    /**
+     * stores the speed and direction of the object
+     */
     private Point2D velocity;
+    /**
+     * image for the view of the object
+     */
     private Image image;
+    /**
+     * used to increase the speed of a object by scale
+     */
     private double velMultiply = 1;
+    /**
+     * used to determine if an object is moving or not
+     */
     private boolean moving = false;
 
+    /**
+     * constructor for creating a new object
+     *
+     * @param w         width of object
+     * @param h         height of object
+     * @param xVel      x speed
+     * @param yVel      y speed
+     * @param image     class path for image
+     * @param droneType enum type
+     */
     public Object(int w, int h, double xVel, double yVel, String image, DroneType droneType) {
         this.droneType = droneType;
-
         this.rectangle = new Rectangle(w, h);
         this.velocity = new Point2D(xVel, yVel);
         this.imageString = image;
         setImage(imageString);
-
     }
 
     public double getVelMultiply() {
@@ -88,17 +125,14 @@ public abstract class Object {
         return velocity;
     }
 
-    public void setVelocity(Point2D velocity) {
+    void setVelocity(Point2D velocity) {
         this.velocity = velocity;
     }
 
-    public Rectangle getRectangle() {
+    Rectangle getRectangle() {
         return rectangle;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public void setRectangle(Rectangle rectangle) {
         this.rectangle = rectangle;
@@ -156,6 +190,8 @@ public abstract class Object {
     }
 
     /**
+     * draws image in the location of the rectangle
+     * if image cant be drawn draw it as a shape
      * @param gc graphics context of the canvas to draw to
      */
     public void draw(GraphicsContext gc) {
@@ -185,7 +221,7 @@ public abstract class Object {
         return moving;
     }
 
-    public void setMoving(boolean moving) {
+    void setMoving(boolean moving) {
         this.moving = moving;
     }
 

@@ -11,7 +11,7 @@ public class FastDrone extends MovingObject {
     public FastDrone() {
         super(50, 50, 1, 0, "images/drone3.png", DroneType.FastDrone);
         setDrawHitBox(false);
-        setHealth(1000);
-        setVelMultiply(5);
+        setHealth(500);
+        setVelMultiply(2);
     }
 }

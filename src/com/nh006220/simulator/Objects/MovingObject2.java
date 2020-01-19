@@ -9,12 +9,6 @@ public class MovingObject2 extends MovingObject {
     }
 
     public MovingObject2() {
-        super(30, 30, 2, 0, "images/drone2.png", DroneType.MovingObject2);
-        setHitBoxRange(1.5);
-    }
-
-    @Override
-    public void move() {
-        super.move();
+        super(50, 50, 2, 0, "images/drone2.png", DroneType.MovingObject2);
     }
 }

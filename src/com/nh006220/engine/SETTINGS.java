@@ -1,5 +1,8 @@
 package com.nh006220.engine;
 
+/**
+ * global game settings
+ */
 public enum SETTINGS {
     ;
     public static int CanvasWidth = 1300;

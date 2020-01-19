@@ -7,20 +7,36 @@ import com.nh006220.engine.ObjectTemplates.StaticObject;
 import com.nh006220.engine.SETTINGS;
 import com.nh006220.simulator.Objects.*;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ObjectManager implements Serializable {
+
+/**
+ * managers the adding and removing of game objects
+ * stores an arrayList of both moving and static objects
+ */
+public class ObjectManager {
+    /**
+     * stores moving objects in the game
+     */
     private List<MovingObject> movingObjects;
+    /**
+     * stores static objects in the game
+     */
     private List<StaticObject> staticObjects;
 
-    public ObjectManager() {
+    /**
+     * default constructor
+     */
+    ObjectManager() {
         this.movingObjects = new ArrayList<>();
         this.staticObjects = new ArrayList<>();
     }
 
+    /**
+     * @return moving and static objects
+     */
     public List<Object> getAllObjects() {
         List<Object> obj = new ArrayList<>();
 
@@ -31,14 +47,22 @@ public class ObjectManager implements Serializable {
 
     }
 
-    public List<MovingObject> getMovingObjects() {
+    List<MovingObject> getMovingObjects() {
         return movingObjects;
     }
 
-    public List<StaticObject> getStaticObjects() {
+    List<StaticObject> getStaticObjects() {
         return staticObjects;
     }
 
+    /**
+     * adding a new moving object
+     *
+     * @param obj  object to add
+     * @param posX position in arena
+     * @param posY position in arena
+     * @return true of added else false
+     */
     public boolean addMovingObject(MovingObject obj, int posX, int posY) {
         obj.setPos(posX, posY);
         if (canAddObject(obj)) {
@@ -49,6 +73,12 @@ public class ObjectManager implements Serializable {
         return false;
     }
 
+    /**
+     * add moving object into random location
+     * calls addMovingObject(Obj, x, y)
+     *
+     * @param obj object to add
+     */
     public void addMovingObject(MovingObject obj) {
         int x = 0;
         Random r = new Random();
@@ -62,6 +92,12 @@ public class ObjectManager implements Serializable {
         }
     }
 
+    /**
+     * adds object based off DroneType enum
+     * calls add object to random location
+     *
+     * @param droneType object type to add
+     */
     public void addObject(DroneType droneType) {
         if (droneType == DroneType.MovingObject1) addMovingObject(new MovingObject1());
         else if (droneType == DroneType.MovingObject2) addMovingObject(new MovingObject2());
@@ -69,8 +105,14 @@ public class ObjectManager implements Serializable {
         else if (droneType == DroneType.BigDrone) addMovingObject(new BigDrone());
         else if (droneType == DroneType.FastDrone) addMovingObject(new FastDrone());
         else if (droneType == DroneType.building) addStaticObject(new Building());
+        else if (droneType == DroneType.StaticTree) addStaticObject(new StaticTree());
     }
 
+    /**
+     * addds static object to random location
+     *
+     * @param staticObject object to add
+     */
     private void addStaticObject(StaticObject staticObject) {
         Random r = new Random();
 
@@ -78,6 +120,13 @@ public class ObjectManager implements Serializable {
     }
 
 
+    /**
+     * adds static object to game in location
+     *
+     * @param obj  object to  add
+     * @param posX position in arena
+     * @param posY position in arena
+     */
     public void addStaticObject(StaticObject obj, int posX, int posY) {
 
         obj.setPos(posX, posY);
@@ -85,6 +134,9 @@ public class ObjectManager implements Serializable {
         staticObjects.add(obj);
     }
 
+    /**
+     * rotate all game objects random
+     */
     public void moveRandom() {
         for (MovingObject m : movingObjects) {
             Random r = new Random();
@@ -92,6 +144,11 @@ public class ObjectManager implements Serializable {
         }
     }
 
+    /**
+     * test if object can be added in this location
+     * @param obj object to try and add
+     * @return true of not colliding in this location
+     */
     private boolean canAddObject(MovingObject obj) {
         return !obj.isColliding(this);
     }
@@ -104,8 +161,21 @@ public class ObjectManager implements Serializable {
                 '}';
     }
 
+    /**
+     * remove moving object from game manager
+     * @param m object to remove
+     */
     public void removeMoving(MovingObject m) {
         System.out.println("removed " + m);
         movingObjects.remove(m);
+    }
+
+    /**
+     * remove static object from game manager
+     *
+     * @param i object to remove
+     */
+    public void removeStatic(Object i) {
+        staticObjects.remove(i);
     }
 }

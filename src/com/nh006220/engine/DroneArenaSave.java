@@ -9,16 +9,41 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * this class is used to convert the drone arena into a serializable format
+ * and load it back into a droneArena object from a text file
+ */
 public class DroneArenaSave implements Serializable {
+    /**
+     * width and height of the arena
+     */
     private int width, height;
+    /**
+     * class path location to get background image from
+     */
+    private String image;
+
+    /**
+     * Serializable list which stores drone object
+     */
     private List<DroneStore> droneStores;
 
+    /**
+     * no constructor parameters
+     */
     public DroneArenaSave() {
     }
 
-    public void arenaSave(DroneArena arena) {
+    /**
+     * converts DroneArena object into serializable object
+     * to be saved
+     *
+     * @param arena DroneArena object to be saved
+     */
+    void arenaSave(DroneArena arena) {
         width = arena.getWidth();
         height = arena.getHeight();
+        image = arena.getBackgroundLocation();
         droneStores = new ArrayList<>();
         for (Object ob : arena.getObjectManager().getAllObjects()) {
             //TODO needs to save type
@@ -35,10 +60,15 @@ public class DroneArenaSave implements Serializable {
         }
     }
 
-    public DroneArena arenaLoad() {
+    /**
+     * loads arena from set text file location
+     *
+     * @return loaded DroneArena object
+     */
+    DroneArena arenaLoad() {
         DroneArena arena = new DroneArena();
 
-        System.out.println(droneStores.toString());
+        arena.setBackground(image);
 
         for (DroneStore object : droneStores) {
             if (object.droneType == DroneType.MovingObject1) {
@@ -71,8 +101,14 @@ public class DroneArenaSave implements Serializable {
                         new Building(object.width, object.height, object.image, object.droneType),
                         object.xPos,
                         object.yPos);
+            } else if (object.droneType == DroneType.StaticTree) {
+                arena.getObjectManager().addStaticObject(
+                        new StaticTree(object.width, object.height, object.image, object.droneType),
+                        object.xPos,
+                        object.yPos);
             }
         }
+
         return arena;
     }
 
@@ -85,6 +121,9 @@ public class DroneArenaSave implements Serializable {
                 '}';
     }
 
+    /**
+     * class used to convert a game object into a serializable format
+     */
     private class DroneStore implements Serializable {
         private DroneType droneType;
         private int width, height;
@@ -92,7 +131,17 @@ public class DroneArenaSave implements Serializable {
         private int xPos, yPos;
         private String image;
 
-        public DroneStore(DroneType droneType, int width, int height, double xVel, double yVel, int xPos, int yPos, String image) {
+        /**
+         * @param droneType enum class storing drone type
+         * @param width     of the object
+         * @param height    of the object
+         * @param xVel      speed in x direction
+         * @param yVel      speed in y direction
+         * @param xPos      position in arena
+         * @param yPos      position in arena
+         * @param image     class path image location
+         */
+        DroneStore(DroneType droneType, int width, int height, double xVel, double yVel, int xPos, int yPos, String image) {
             this.droneType = droneType;
             this.width = width;
             this.height = height;

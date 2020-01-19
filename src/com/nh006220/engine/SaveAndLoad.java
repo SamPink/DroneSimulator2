@@ -4,15 +4,33 @@ import com.nh006220.engine.Arena.DroneArena;
 
 import java.io.*;
 
-public class SaveAndLoad {
-
+/**
+ * file io handler for save and load
+ * uses drone arena DroneArenaSave to convert to a from a serializable format
+ */
+class SaveAndLoad {
+    /**
+     * Stores arena to be saved and loaded
+     */
     private DroneArena arena;
+
+    /**
+     * default file save name
+     */
     private String fileName = "defaultSave.txt";
 
-    public SaveAndLoad() {
+    /**
+     * no constructor parameters
+     */
+    SaveAndLoad() {
     }
 
-    public void saveToFile(DroneArena arena) {
+    /**
+     * saves passed DroneArena to fileName
+     *
+     * @param arena to save
+     */
+    void saveToFile(DroneArena arena) {
         this.arena = arena;
 
         try {
@@ -32,8 +50,14 @@ public class SaveAndLoad {
         }
     }
 
-    public DroneArenaSave loadFromFile(String s) {
-        FileInputStream fi = null;
+    /**
+     * loads arena into memory from specified file location
+     *
+     * @param s file to load
+     * @return serialized format of drone arena
+     */
+    DroneArenaSave loadFromFile(String s) {
+        FileInputStream fi;
         DroneArenaSave pr1 = new DroneArenaSave();
         try {
             fi = new FileInputStream(new File(s));
@@ -46,22 +70,20 @@ public class SaveAndLoad {
             fi.close();
 
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
 
         return pr1;
     }
 
-    public String getFileName() {
-        return fileName;
-    }
 
-    public void setFileName(String text) {
+    /**
+     * appends .txt to file name if not typed
+     *
+     * @param text returns file name to be saved
+     */
+    void setFileName(String text) {
         if (!text.contains(".txt")) {
             fileName = text + ".txt";
         }

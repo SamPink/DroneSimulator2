@@ -10,22 +10,67 @@ import javafx.scene.shape.Rectangle;
 import java.util.Random;
 
 
+/**
+ * implements object
+ * parent class all moving objects inherit from
+ * has a hit box rectangle used to determine collisions
+ * only drawn and updated if alive (health > 0)
+ */
 public abstract class MovingObject extends Object {
+    /**
+     * true if object colliding else false
+     */
     private boolean colliding;
+    /**
+     * health value, if < 0 object !alive
+     */
     private int health;
+    /**
+     * stores the colliding with object
+     */
     private Object collidingWith;
+    /**
+     * hitBox used for collisions
+     */
     private Rectangle hitBox;
+    /**
+     * size scale for hitBox so can be larger or smaller than object
+     */
     private double hitBoxRange = 1;
+    /**
+     * if the hitBox should be rendered to the screen
+     */
     private boolean drawHitBox;
+    /**
+     * stores the type of collisions the object is having
+     */
     private CollisionType collisionType;
+    /**
+     * color of the hitBox when render to the screen
+     */
     private Color hitBoxColor;
+    /**
+     * determines when object should change direction
+     */
     private int changeDirection;
+    /**
+     * velocity multiplier scale
+     */
+    private double velMultiply = 1;
 
 
+    /**
+     * moving object constructor, calls super constructor
+     *
+     * @param w         width of object
+     * @param h         height of object
+     * @param xVel      x speed  of object
+     * @param yVel      y speed of object
+     * @param image     class path image location
+     * @param droneType enum type
+     */
     public MovingObject(int w, int h, double xVel, double yVel, String image, DroneType droneType) {
         super(w, h, xVel, yVel, image, droneType);
-        //setVelocity(new SerializablePoint2D(2.5, 0));
-        moveRandom();
         health = 100;
         hitBox = new Rectangle(getWidth() * hitBoxRange, getHeight() * hitBoxRange);
         setMoving(true);
@@ -35,7 +80,7 @@ public abstract class MovingObject extends Object {
         return colliding;
     }
 
-    public Rectangle getHitBox() {
+    private Rectangle getHitBox() {
         return hitBox;
     }
 
@@ -52,11 +97,11 @@ public abstract class MovingObject extends Object {
         hitBox = new Rectangle(getWidth() * hitBoxRange, getHeight() * hitBoxRange);
     }
 
-    public int getHealth() {
+    private int getHealth() {
         return health;
     }
 
-    public void setHealth(int health) {
+    protected void setHealth(int health) {
         this.health = health;
     }
 
@@ -88,35 +133,31 @@ public abstract class MovingObject extends Object {
         }
     }
 
-    private void moveRandom() {
-        Random random = new Random();
-
-        rotateAngle(random.nextInt(360));
-    }
-
     public boolean getColliding() {
         return this.colliding;
     }
 
-    public void setColliding(boolean b) {
+    private void setColliding(boolean b) {
         this.colliding = b;
     }
 
+    /**
+     * is object colliding with anything within the arena
+     *
+     * @param objectManager store of objects that can be colliding with
+     * @return true if colliding, else false
+     */
     public boolean isColliding(ObjectManager objectManager) {
-        if (isInBounds(SETTINGS.CanvasWidth, SETTINGS.GroundOnBackgroundImage)) {
+        if (isInBounds(SETTINGS.CanvasWidth, SETTINGS.GroundOnBackgroundImage) || isCollidingWithObject(objectManager))
             setColliding(true);
-        } else if (isCollidingWithObject(objectManager)) {
-            setColliding(true);
-        } else {
 
-        }
         return getColliding();
     }
 
     /**
      * loop through all objects in arena
-     *
-     * @param objectManager
+     * tests each object to see if it intersects with hitBox
+     * @param objectManager all objects in arena
      * @return true if intersecting
      */
     private boolean isCollidingWithObject(ObjectManager objectManager) {
@@ -158,32 +199,37 @@ public abstract class MovingObject extends Object {
         return false;
     }
 
+    /**
+     * action the object should take of is colliding
+     * uses collision type to determine what type of action should be taken
+     * sets colliding to false
+     */
     public void onCollision() {
-        toString();
         Random random = new Random();
         if (getCollisionType() == CollisionType.Object) {
             if (getCollidingWith().isMoving()) {
+                //colliding with a moving object, switch velocity with colliding with object
                 //TODO switch direction not speed
                 Point2D velocity = getVelocity();
                 setVelocity(getCollidingWith().getVelocity());
                 getCollidingWith().setVelocity(velocity);
                 setVelMultiply(getVelMultiply() + 0.01);
                 setHealth(getHealth() - 5);
-                if (getCollidingWith().isMoving()) {
-                    MovingObject collidingWith = (MovingObject) getCollidingWith();
-                    collidingWith.setHealth(getHealth() + 5);
-                }
             } else {
-                rotateAngle(60);
+                //colliding with static object
+                rotateAngle(getRotate() + 50);
             }
         } else if (getCollisionType() == CollisionType.Left) {
             //left wall opposite direction
             rotateAngle((int) (((getRotate() + Math.PI)) % (2 * Math.PI)));
         } else if (getCollisionType() == CollisionType.Right) {
+            //right wall
             rotateAngle(-180 - random.nextInt(90));
         } else if (getCollisionType() == CollisionType.Top) {
+            //top wall
             rotateAngle(90 + random.nextInt(90));
         } else if (getCollisionType() == CollisionType.Bottom) {
+            //bottom wall
             rotateAngle(-90 - random.nextInt(90));
         }
 
@@ -193,11 +239,11 @@ public abstract class MovingObject extends Object {
 
     }
 
-    public Object getCollidingWith() {
+    private Object getCollidingWith() {
         return collidingWith;
     }
 
-    public void setCollidingWith(Object obj) {
+    private void setCollidingWith(Object obj) {
         this.collidingWith = obj;
     }
 
@@ -205,7 +251,7 @@ public abstract class MovingObject extends Object {
         return drawHitBox;
     }
 
-    public void setDrawHitBox(boolean drawHitBox) {
+    protected void setDrawHitBox(boolean drawHitBox) {
         this.drawHitBox = drawHitBox;
     }
 
@@ -213,20 +259,23 @@ public abstract class MovingObject extends Object {
         return getHealth() > 0;
     }
 
-    public CollisionType getCollisionType() {
+    private CollisionType getCollisionType() {
         return collisionType;
     }
 
-    public void setCollisionType(CollisionType collisionType) {
+    private void setCollisionType(CollisionType collisionType) {
         this.collisionType = collisionType;
     }
 
-    public Color getHealthColor() {
+    private Color getHealthColor() {
         int i = 255 - 2 * (100 - getHealth());
         if (i > 255) i = 255;
         return hitBoxColor = Color.rgb(i, 0, 0);
     }
 
+    /**
+     * makes object move in new random direction every 100 frames
+     */
     public void move() {
         if (changeDirection > 100) {
             Random r = new Random();
@@ -242,6 +291,16 @@ public abstract class MovingObject extends Object {
 
     public void setHitBoxColor(Color hitBoxColor) {
         this.hitBoxColor = hitBoxColor;
+    }
+
+    public double getVelMultiply() {
+        return velMultiply;
+    }
+
+    public void setVelMultiply(double velMultiply) {
+        this.velMultiply = velMultiply;
+
+        setVelocity(getVelocity().multiply(velMultiply));
     }
 }
 

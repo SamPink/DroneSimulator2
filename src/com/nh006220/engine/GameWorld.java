@@ -1,6 +1,7 @@
 package com.nh006220.engine;
 
 import com.nh006220.engine.Arena.DroneArena;
+import com.nh006220.engine.ObjectTemplates.MovingObject;
 import com.nh006220.engine.ObjectTemplates.Object;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -21,6 +22,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * base class that application can be build from
+ */
 public abstract class GameWorld extends Application {
     /**
      * the top level element of the game
@@ -47,8 +51,14 @@ public abstract class GameWorld extends Application {
      */
     private DroneArena arena;
 
+    /**
+     * where game graphics a drawn to
+     */
     private GraphicsContext gc;
 
+    /**
+     * canvas game is drawn on
+     */
     private Canvas canvas;
 
 
@@ -134,6 +144,13 @@ public abstract class GameWorld extends Application {
         return popup;
     }
 
+    /**
+     * list view of arena contents
+     * of click of each object will open a object editor
+     *
+     * @param a arena to show content of
+     * @return list view node with arena contents
+     */
     protected Node newListView(DroneArena a) {
         ListView<String> arenaContent = new ListView<>();
         arenaContent.setMinWidth(400);
@@ -153,7 +170,14 @@ public abstract class GameWorld extends Application {
         return arenaContent;
     }
 
-    protected Pane newDroneMenu(Object i) {
+    /**
+     * drone editor screen
+     * allows the properties of the object to edited
+     *
+     * @param i object to edit
+     * @return popup pane
+     */
+    private Pane newDroneMenu(Object i) {
         Slider speed = new Slider(0, 10, 1);
         speed.setValue(i.getVelMultiply());
         speed.setShowTickLabels(true);
@@ -219,17 +243,22 @@ public abstract class GameWorld extends Application {
         });
 
         Button setPosOnScreenButton = new Button("Set position on canvas");
-        setPosOnScreenButton.setOnAction(actionEvent -> {
-            getCanvas().setOnMousePressed(mouseEvent -> {
-                i.setPos((int) mouseEvent.getX(), (int) mouseEvent.getY());
-                i.update();
-                getGc().fillRect(mouseEvent.getX(), mouseEvent.getY(), 5, 5);
-                getCanvas().setOnMousePressed(mouseEvent1 -> System.out.println());
-            });
+        setPosOnScreenButton.setOnAction(actionEvent -> getCanvas().setOnMousePressed(mouseEvent -> {
+            i.setPos((int) mouseEvent.getX(), (int) mouseEvent.getY());
+            i.update();
+            getGc().fillRect(mouseEvent.getX(), mouseEvent.getY(), 5, 5);
+            getCanvas().setOnMousePressed(mouseEvent1 -> System.out.println());
+        }));
+
+        Button remove = new Button("Remove");
+
+        remove.setOnAction(actionEvent -> {
+            if (i.isMoving()) getArena().getObjectManager().removeMoving((MovingObject) i);
+            else getArena().getObjectManager().removeStatic(i);
         });
 
 
-        return new VBox(setSpeed, setRotation, setX, setY, store, setPosOnScreenButton, setWidth, setHeight);
+        return new VBox(setSpeed, setRotation, setX, setY, store, setPosOnScreenButton, setWidth, setHeight, remove);
     }
 
     /**
@@ -247,6 +276,9 @@ public abstract class GameWorld extends Application {
         setTimer(timer);
     }
 
+    /**
+     * starts the game timer if running
+     */
     protected void start() {
         try {
             getTimer().start();
@@ -255,6 +287,9 @@ public abstract class GameWorld extends Application {
         }
     }
 
+    /**
+     * pauses game timer if running
+     */
     protected void pause() {
         try {
             getTimer().stop();
@@ -263,8 +298,14 @@ public abstract class GameWorld extends Application {
         }
     }
 
+    /**
+     * method called on each tick of animation timer
+     */
     protected abstract void onFrame();
 
+    /**
+     * method called each second
+     */
     protected abstract void onSecond();
 
     /**
@@ -276,12 +317,14 @@ public abstract class GameWorld extends Application {
         SaveAndLoad saveAndLoad = new SaveAndLoad();
 
         if (!getCurrentLoad().isEmpty()) {
+            //Allows current arena to be auto saved if it is loaded from a save
             saveAndLoad.setFileName(getCurrentLoad());
 
             saveAndLoad.saveToFile(arena);
 
             System.out.println("Saved");
         } else {
+            //Create a new save
             TextField textField = new TextField();
             Button save = new Button("Save name");
 
@@ -301,9 +344,8 @@ public abstract class GameWorld extends Application {
     }
 
     /**
+     * opens popup asking what arena to load
      * builds a drone arena from file
-     *
-     * @return configured drone arena
      */
     protected void load() {
         SaveAndLoad saveAndLoad = new SaveAndLoad();
@@ -346,6 +388,7 @@ public abstract class GameWorld extends Application {
         List<String> saves = new ArrayList<>();
         File f = new File("."); // current directory
         File[] files = f.listFiles();
+        assert files != null;
         for (File file : files) {
             if (!file.isDirectory() && file.getName().contains(".txt")) {
                 saves.add(file.getName());
@@ -371,8 +414,6 @@ public abstract class GameWorld extends Application {
      * set root level pane
      * used to move between scenes
      * all scenes in the game have the same size window
-     *
-     * @param pane
      */
     protected void setScene(Pane pane) {
         getStage().setScene(new Scene(pane, SETTINGS.SceneWidth, SETTINGS.SceneHeight));
@@ -390,46 +431,52 @@ public abstract class GameWorld extends Application {
         return title;
     }
 
-    public Stage getStage() {
+    private Stage getStage() {
         return stage;
     }
 
-    public void setStage(Stage stage) {
+    private void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    public String getCurrentLoad() {
+    private String getCurrentLoad() {
         return currentLoad;
     }
 
-    public void setCurrentLoad(String currentLoad) {
+    private void setCurrentLoad(String currentLoad) {
         this.currentLoad = currentLoad;
     }
 
-    public AnimationTimer getTimer() {
+    private AnimationTimer getTimer() {
         return timer;
     }
 
-    public void setTimer(AnimationTimer timer) {
+    private void setTimer(AnimationTimer timer) {
         this.timer = timer;
     }
 
-    public GraphicsContext getGc() {
+    protected GraphicsContext getGc() {
         return gc;
     }
 
-    public void setGc(GraphicsContext gc) {
+    protected void setGc(GraphicsContext gc) {
         this.gc = gc;
     }
 
-    public Canvas getCanvas() {
+    protected Canvas getCanvas() {
         return canvas;
     }
 
-    public void setCanvas(Canvas canvas) {
+    protected void setCanvas(Canvas canvas) {
         this.canvas = canvas;
     }
 
+    /**
+     * closes the game
+     * saves first
+     *
+     * @throws Exception if cant close
+     */
     @Override
     public void stop() throws Exception {
         save(getArena());

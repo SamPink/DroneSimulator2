@@ -15,15 +15,27 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * implementation of engine
+ * this is where the simulation is build
+ * implemented methods a used to create the game layout and functions
+ */
 public class Simulation extends GameWorld {
     private BorderPane bpGame;
     private GraphicsContext gc;
 
+    /**
+     * start screen of the game
+     * gives options on weather to load into a saved simulations
+     * or create a new game
+     * can also be used to load pre set simulations
+     *
+     * @return new menu pane
+     */
     @Override
     protected Pane newMenu() {
         BorderPane bp = new BorderPane();
@@ -33,25 +45,31 @@ public class Simulation extends GameWorld {
 
         Button newGame = new Button("New Game");
         Button openGame = new Button("Open Game");
-        Button simulation1 = new Button("Simulation 1");
         Button settings = new Button("Settings");
         Button openHelp = new Button("Open Help");
 
         newGame.setOnAction(actionEvent -> setScene(newArenaBuilder(new DroneArena())));
         openGame.setOnAction(actionEvent -> load());
         openHelp.setOnAction(actionEvent -> setScene(newHelp()));
-        simulation1.setOnAction(actionEvent -> setScene(newGame(SimulationBuilder.basicArena())));
 
-        VBox vBox = new VBox(newGame, openGame, simulation1, settings, openHelp);
+        VBox vBox = new VBox(newGame, openGame, settings, openHelp);
 
         vBox.setPadding(new Insets(20));
 
-        Pane pane = new Pane(text, vBox);
+
+        Button simulation1 = new Button("Simulation 1");
+        Button simulation2 = new Button("Buildings");
+        simulation1.setOnAction(actionEvent -> setScene(newGame(SimulationBuilder.basicArena())));
+        simulation2.setOnAction(actionEvent -> setScene(newGame(SimulationBuilder.woodsArena())));
+        VBox setGamesVBox1 = new VBox(simulation1, simulation2);
+        setGamesVBox1.setPadding(new Insets(20));
+
+
+        Pane pane = new Pane(text, new HBox(vBox, setGamesVBox1));
         pane.setTranslateX(500);
         pane.setTranslateY(500);
         pane.setPadding(new Insets(300));
 
-        //bp.setTop(newToolbar());
         bp.setCenter(pane);
 
         return bp;
@@ -60,7 +78,7 @@ public class Simulation extends GameWorld {
     /**
      * Creates game pane
      *
-     * @param arena
+     * @param arena arena to load into pane
      * @return game pane
      */
     @Override
@@ -78,13 +96,8 @@ public class Simulation extends GameWorld {
 
         getGc().clearRect(0, 0, SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
 
-        Canvas background = new Canvas();
-        background.getGraphicsContext2D().setFill(Color.BLUE);
-
-        pane.getChildren().add(background);
         pane.getChildren().add(getCanvas());
-
-        background.toFront();
+        pane.setBackground(arena.getBackground());
 
         bpGame.setCenter(pane);
 
@@ -180,7 +193,7 @@ public class Simulation extends GameWorld {
 
         start.setOnAction(actionEvent -> start());
         pause.setOnAction(actionEvent -> pause());
-        stop.setOnAction(actionEvent -> pause());
+        stop.setOnAction(actionEvent -> setScene(newMenu()));
         save.setOnAction(actionEvent -> save(getArena()));
         load.setOnAction(actionEvent -> load());
         resetArena.setOnAction(actionEvent -> reset());
@@ -188,10 +201,8 @@ public class Simulation extends GameWorld {
             DroneType droneType = DroneType.valueOf(comboBox.getValue().toString());
             getArena().getObjectManager().addObject(droneType);
         });
-        arenaEditor.setOnAction(actionEvent -> {
-            newPopup(newListView(getArena()));
-        });
 
+        arenaEditor.setOnAction(actionEvent -> newPopup(newListView(getArena())));
 
         return new ToolBar(start, pause, stop, comboBox, save, load, resetArena, arenaEditor);
     }
@@ -209,11 +220,11 @@ public class Simulation extends GameWorld {
 
     @Override
     protected void onSecond() {
-
+        //TODO implement this
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         initialize(stage);
     }
 }
