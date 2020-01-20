@@ -431,7 +431,7 @@ public abstract class GameWorld extends Application {
         return title;
     }
 
-    private Stage getStage() {
+    protected Stage getStage() {
         return stage;
     }
 

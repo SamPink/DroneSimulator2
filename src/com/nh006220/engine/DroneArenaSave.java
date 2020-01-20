@@ -46,7 +46,6 @@ public class DroneArenaSave implements Serializable {
         image = arena.getBackgroundLocation();
         droneStores = new ArrayList<>();
         for (Object ob : arena.getObjectManager().getAllObjects()) {
-            //TODO needs to save type
             droneStores.add(new DroneStore(
                     ob.getDroneType(),
                     ob.getWidth(),

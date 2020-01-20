@@ -4,21 +4,23 @@ import com.nh006220.engine.Arena.DroneArena;
 import com.nh006220.engine.GameWorld;
 import com.nh006220.engine.ObjectTemplates.DroneType;
 import com.nh006220.engine.SETTINGS;
+import com.nh006220.simulator.Objects.MovingObject1;
+import com.nh006220.simulator.Objects.MovingObject2;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.stream.IntStream;
 
 /**
  * implementation of engine
@@ -27,7 +29,6 @@ import javafx.stage.Stage;
  */
 public class Simulation extends GameWorld {
     private BorderPane bpGame;
-    private GraphicsContext gc;
 
     /**
      * start screen of the game
@@ -40,6 +41,7 @@ public class Simulation extends GameWorld {
     @Override
     protected Pane newMenu() {
         BorderPane bp = new BorderPane();
+        bp.setBackground(new Background(new BackgroundFill(Color.SLATEGRAY,CornerRadii.EMPTY, Insets.EMPTY)));
         Text text = new Text("Drone Simulator");
 
         text.setFont(new Font("Juice ITC", 93));
@@ -56,7 +58,7 @@ public class Simulation extends GameWorld {
 
         VBox vBox = new VBox(newGame, openGame, settings, openHelp);
 
-        vBox.setPadding(new Insets(20));
+        vBox.setPadding(new Insets(50));
 
 
         Button simulation1 = new Button("Simulation 1");
@@ -64,13 +66,15 @@ public class Simulation extends GameWorld {
         simulation1.setOnAction(actionEvent -> setScene(newGame(SimulationBuilder.basicArena())));
         simulation2.setOnAction(actionEvent -> setScene(newGame(SimulationBuilder.woodsArena())));
         VBox setGamesVBox1 = new VBox(simulation1, simulation2);
-        setGamesVBox1.setPadding(new Insets(20));
+        setGamesVBox1.setPadding(new Insets(50));
 
 
         Pane pane = new Pane(text, new HBox(vBox, setGamesVBox1));
         pane.setTranslateX(500);
-        pane.setTranslateY(500);
+        pane.setTranslateY(300);
+
         pane.setPadding(new Insets(300));
+
 
         bp.setCenter(pane);
 
@@ -88,8 +92,6 @@ public class Simulation extends GameWorld {
         bpGame = new BorderPane();
         Pane pane = new Pane();
 
-        setArena(arena);
-
         newTimer();
 
         setCanvas(new Canvas(SETTINGS.CanvasWidth, SETTINGS.CanvasHeight));
@@ -97,6 +99,8 @@ public class Simulation extends GameWorld {
         setGc(getCanvas().getGraphicsContext2D());
 
         getGc().clearRect(0, 0, SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
+
+        setArena(arena);
 
         pane.getChildren().add(getCanvas());
         pane.setBackground(arena.getBackground());
@@ -201,6 +205,8 @@ public class Simulation extends GameWorld {
         Button load = new Button("Load");
         Button resetArena = new Button("Reset arena");
         Button arenaEditor = new Button("Edit Arena");
+        Button playerMode = new Button("Player mode");
+
 
 
         ComboBox<? extends DroneType> comboBox = new ComboBox<>(FXCollections.observableArrayList(DroneType.values()));
@@ -218,8 +224,32 @@ public class Simulation extends GameWorld {
         });
 
         arenaEditor.setOnAction(actionEvent -> newPopup(newListView(getArena())));
+        playerMode.setOnAction(actionEvent -> playerMode());
 
-        return new ToolBar(start, pause, stop, comboBox, save, load, resetArena, arenaEditor);
+        return new ToolBar(start, pause, stop, comboBox, save, load, resetArena, arenaEditor, playerMode);
+    }
+
+    private void playerMode() {
+        setArena(new DroneArena());
+
+        MovingObject1 m = new MovingObject1();
+        m.setIsPlayer(true);
+        m.setVelMultiply(2);
+
+        getArena().getObjectManager().addMovingObject(m, SETTINGS.CanvasWidth/2,SETTINGS.CanvasHeight/2);
+
+        IntStream.range(0, 10).forEach(i -> getArena().getObjectManager().addMovingObject(new MovingObject2()));
+
+        getStage().getScene().setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.W) m.rotateAngle(-90);
+            else if(keyEvent.getCode() == KeyCode.A) m.rotateAngle(-180);
+            else if(keyEvent.getCode() == KeyCode.S) m.rotateAngle(90);
+            else if(keyEvent.getCode() == KeyCode.D) m.rotateAngle(0);
+        });
+
+        pause();
+
+        newPopup(new Text("use WASD to play. try to stay alive as long as possible"));
     }
 
     /**
@@ -238,9 +268,13 @@ public class Simulation extends GameWorld {
 
     @Override
     protected void onFrame() {
-        getArena().updateGame(getGc());
+        try{
+            getArena().updateGame(getGc());
 
-        bpGame.setRight(newListView(getArena()));
+            bpGame.setRight(newListView(getArena()));
+        }catch (Exception e){
+            //TODO handle
+        }
     }
 
     @Override

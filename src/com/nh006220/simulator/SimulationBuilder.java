@@ -3,8 +3,10 @@ package com.nh006220.simulator;
 import com.nh006220.engine.Arena.DroneArena;
 import com.nh006220.engine.ObjectTemplates.DroneType;
 import com.nh006220.engine.SETTINGS;
+import com.nh006220.simulator.Objects.FastDrone;
 import com.nh006220.simulator.Objects.MovingObject1;
 import com.nh006220.simulator.Objects.StaticTree;
+import javafx.scene.canvas.Canvas;
 
 /**
  * static class used to load pre set arena into the simulation
@@ -40,5 +42,17 @@ class SimulationBuilder {
 
         return arena;
 
+    }
+
+    public static DroneArena playerMode(Canvas canvas) {
+        DroneArena arena = new DroneArena();
+
+        arena.getObjectManager().addMovingObject(new FastDrone());
+
+        canvas.setOnKeyPressed(keyEvent -> {
+            System.out.println(keyEvent.getCode());
+        });
+
+        return arena;
     }
 }

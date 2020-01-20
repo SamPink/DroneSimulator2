@@ -175,7 +175,7 @@ public abstract class Object {
                 Math.cos(Math.toRadians(rectangle.getRotate())),
                 Math.sin(Math.toRadians(rectangle.getRotate()))
         ));
-        //setVelocity(getVelocity().multiply(velMultiply));
+        setVelocity(getVelocity().multiply(velMultiply));
     }
 
     /**

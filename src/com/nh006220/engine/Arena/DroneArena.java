@@ -76,15 +76,12 @@ public class DroneArena {
         gc.clearRect(0, 0, SETTINGS.CanvasWidth, SETTINGS.CanvasHeight);
 
         for (MovingObject m : objectManager.getMovingObjects()) {
+            if(!m.isAlive()) getObjectManager().removeMoving(m);
+
             m.update();
 
-            if (!m.getColliding() && m.isColliding(objectManager)) {
-                m.onCollision();
-            } else {
-                m.move();
-            }
-
-            if (!m.isAlive()) getObjectManager().removeMoving(m);
+            if (!m.getColliding() && m.isColliding(objectManager)) m.onCollision();
+            else if(!m.isPlayer()) m.move();
 
             m.draw(gc);
         }

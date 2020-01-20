@@ -57,6 +57,10 @@ public abstract class MovingObject extends Object {
      * velocity multiplier scale
      */
     private double velMultiply = 1;
+    /**
+     * true if player is controllable
+     */
+    private boolean isPlayer = false;
 
 
     /**
@@ -301,6 +305,14 @@ public abstract class MovingObject extends Object {
         this.velMultiply = velMultiply;
 
         setVelocity(getVelocity().multiply(velMultiply));
+    }
+
+    public boolean isPlayer() {
+        return isPlayer;
+    }
+
+    public void setIsPlayer(boolean b) {
+        isPlayer = true;
     }
 }
 
