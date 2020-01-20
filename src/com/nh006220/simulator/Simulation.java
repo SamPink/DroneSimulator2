@@ -10,6 +10,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -51,6 +52,7 @@ public class Simulation extends GameWorld {
         newGame.setOnAction(actionEvent -> setScene(newArenaBuilder(new DroneArena())));
         openGame.setOnAction(actionEvent -> load());
         openHelp.setOnAction(actionEvent -> setScene(newHelp()));
+        settings.setOnAction(actionEvent -> setScene(newSettings()));
 
         VBox vBox = new VBox(newGame, openGame, settings, openHelp);
 
@@ -99,6 +101,8 @@ public class Simulation extends GameWorld {
         pane.getChildren().add(getCanvas());
         pane.setBackground(arena.getBackground());
 
+        SETTINGS.GroundOnBackgroundImage = 550;
+
         bpGame.setCenter(pane);
 
         bpGame.setTop(newToolbar());
@@ -117,7 +121,18 @@ public class Simulation extends GameWorld {
      */
     @Override
     protected Pane newHelp() {
-        return null;
+        TextArea textArea = new TextArea("A new simulation can be created by selecting the new game option on the loading screen. " +
+                "This will take you to the arena builder when you can set the objects that will be in the arena. " +
+                "Clicking on each of these objects will allow you to edit the properties of them" +
+                "when the simulation is started you can edit the objects within it by clicking them on the right hand side.");
+
+
+        textArea.setWrapText(true);
+        textArea.setEditable(false);
+
+        Button goHome = new Button("go back");
+        goHome.setOnAction(actionEvent -> setScene(newMenu()));
+        return new HBox(textArea, goHome);
     }
 
 
@@ -205,6 +220,16 @@ public class Simulation extends GameWorld {
         arenaEditor.setOnAction(actionEvent -> newPopup(newListView(getArena())));
 
         return new ToolBar(start, pause, stop, comboBox, save, load, resetArena, arenaEditor);
+    }
+
+    /**
+     * creates settings screen
+     *
+     * @return settings
+     */
+    @Override
+    protected Pane newSettings() {
+        return null;
     }
 
     private void reset() {

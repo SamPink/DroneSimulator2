@@ -147,6 +147,7 @@ public class ObjectManager {
 
     /**
      * test if object can be added in this location
+     *
      * @param obj object to try and add
      * @return true of not colliding in this location
      */
@@ -164,6 +165,7 @@ public class ObjectManager {
 
     /**
      * remove moving object from game manager
+     *
      * @param m object to remove
      */
     public void removeMoving(MovingObject m) {

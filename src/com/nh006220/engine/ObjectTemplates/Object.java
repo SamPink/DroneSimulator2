@@ -101,20 +101,28 @@ public abstract class Object {
         return (int) rectangle.getTranslateX();
     }
 
+    public void setX(int x) {
+        rectangle.setTranslateX(x);
+    }
+
     public int getY() {
         return (int) rectangle.getTranslateY();
+    }
+
+    public void setY(int y) {
+        rectangle.setTranslateY(y);
     }
 
     public int getWidth() {
         return (int) rectangle.getWidth();
     }
 
-    public int getHeight() {
-        return (int) rectangle.getHeight();
-    }
-
     public void setWidth(int value) {
         rectangle.setWidth(value);
+    }
+
+    public int getHeight() {
+        return (int) rectangle.getHeight();
     }
 
     public void setHeight(int value) {
@@ -133,13 +141,8 @@ public abstract class Object {
         return rectangle;
     }
 
-
     public void setRectangle(Rectangle rectangle) {
         this.rectangle = rectangle;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
     }
 
     public int getRotate() {
@@ -151,16 +154,12 @@ public abstract class Object {
         rectangle.setTranslateY(posY);
     }
 
-    public void setX(int x) {
-        rectangle.setTranslateX(x);
-    }
-
-    public void setY(int y) {
-        rectangle.setTranslateY(y);
-    }
-
     public Image getImage() {
         return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     private void setImage(String image) {
@@ -176,7 +175,7 @@ public abstract class Object {
                 Math.cos(Math.toRadians(rectangle.getRotate())),
                 Math.sin(Math.toRadians(rectangle.getRotate()))
         ));
-        setVelocity(getVelocity().multiply(velMultiply));
+        //setVelocity(getVelocity().multiply(velMultiply));
     }
 
     /**
@@ -192,6 +191,7 @@ public abstract class Object {
     /**
      * draws image in the location of the rectangle
      * if image cant be drawn draw it as a shape
+     *
      * @param gc graphics context of the canvas to draw to
      */
     public void draw(GraphicsContext gc) {

@@ -114,6 +114,13 @@ public abstract class GameWorld extends Application {
     protected abstract ToolBar newToolbar();
 
     /**
+     * creates settings screen
+     *
+     * @return settings
+     */
+    protected abstract Pane newSettings();
+
+    /**
      * creates a new popup window to add game options to
      *
      * @param node element to display in center of popup

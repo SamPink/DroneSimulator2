@@ -157,6 +157,7 @@ public abstract class MovingObject extends Object {
     /**
      * loop through all objects in arena
      * tests each object to see if it intersects with hitBox
+     *
      * @param objectManager all objects in arena
      * @return true if intersecting
      */
