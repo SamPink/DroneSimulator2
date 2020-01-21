@@ -4,6 +4,7 @@ import com.nh006220.engine.Arena.DroneArena;
 import com.nh006220.engine.GameWorld;
 import com.nh006220.engine.ObjectTemplates.DroneType;
 import com.nh006220.engine.SETTINGS;
+import com.nh006220.simulator.Objects.Building;
 import com.nh006220.simulator.Objects.MovingObject1;
 import com.nh006220.simulator.Objects.MovingObject2;
 import javafx.collections.FXCollections;
@@ -20,6 +21,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.Random;
 import java.util.stream.IntStream;
 
 /**
@@ -238,7 +240,13 @@ public class Simulation extends GameWorld {
 
         getArena().getObjectManager().addMovingObject(m, SETTINGS.CanvasWidth/2,SETTINGS.CanvasHeight/2);
 
-        IntStream.range(0, 10).forEach(i -> getArena().getObjectManager().addMovingObject(new MovingObject2()));
+        Random r = new Random();
+
+        for (int i = 0; i < 20; i++) {
+            MovingObject2 movingObject2 = new MovingObject2();
+            movingObject2.setHealth(250);
+            getArena().getObjectManager().addMovingObject(movingObject2);
+        }
 
         getStage().getScene().setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.W) m.rotateAngle(-90);

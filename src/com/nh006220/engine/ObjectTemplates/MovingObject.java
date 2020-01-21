@@ -101,11 +101,11 @@ public abstract class MovingObject extends Object {
         hitBox = new Rectangle(getWidth() * hitBoxRange, getHeight() * hitBoxRange);
     }
 
-    private int getHealth() {
+    public int getHealth() {
         return health;
     }
 
-    protected void setHealth(int health) {
+    public void setHealth(int health) {
         this.health = health;
     }
 
